@@ -27,6 +27,8 @@ def clearQueue():
     for player in playerData:
         playerData[player]["queue"] = "none"
     savePlayerData(playerData)
+    numQueued = {"tank":0, "dps":0, "support":0}
+    
 clearQueue()
 
 
@@ -83,22 +85,25 @@ def tankQueued():
 # playerData is a hashtable of all players
 def adjust(winner):
     playerData = loadPlayerData()
+    print(winner)
     
     if(winner == 0):
         return playerData
     
     for player in playerData.keys():
         if(playerData[player]['team'] == winner):
+            print(playerData[player] + " t1")
             role = playerData[player]['queue']
             playerData[player][role] += 100
         elif(playerData[player]['team'] != -1):
+            print(playerData[player] + " t2")
             role = playerData[player]['queue']
             playerData[player][role] -= 100
         playerData[player]['team'] = -1
         playerData[player]['queue'] = 'none'
 
     savePlayerData(playerData)
-    return playerData
+    #return playerData
 
 
 def dpsQueued():

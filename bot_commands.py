@@ -72,17 +72,9 @@ def split(playerData):
 def select(role):
     # print(len(role))
     selected = []
-    already_played = []
-	for i in role:
-		if i['team'] == -1:
-			selected.append(i)
-    		if len(selected) == 4:
-				return selected
-		else: 
-			already_played.append(i)        
-    nums = np.random.choice(len(already_played), 4-len(selected), replace=False)
+    nums = np.random.choice(len(role), 4, replace=False)
     for i in range(len(nums)):
-        selected.append(already_played[i])
+        selected.append(role[i])
     return selected
 
 # given a role hash table

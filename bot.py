@@ -55,25 +55,28 @@ async def mention(ctx):
 @client.command(aliases=["bi", "pan"])
 async def gay(ctx):
         i = random.randint(0,8)
-        if (i % 8) == 0:
-                await ctx.send(ctx.message.author.mention + " is gay.")
-        elif (i % 8) == 1:
-                await ctx.send(ctx.message.author.mention + " is straight.")
-        elif (i % 8) == 2:
-                await ctx.send(ctx.message.author.mention + " is asexual.")
-        elif (i % 8) == 3:
-                await ctx.send(ctx.message.author.mention + " is bisexual.")
-        elif (i % 8) == 4:
-                await ctx.send(ctx.message.author.mention + " is closeted :0.")
-        elif (i % 8) == 5:
-                await ctx.send(ctx.message.author.mention + " just came out!")
-        elif (i % 8) == 6:
-                await ctx.send(ctx.message.author.mention + " is pan.")
-        elif (i % 8) == 7:
-                await ctx.send(ctx.message.author.mention + " is sexy af.")
-        elif (i % 8) == 8:
-                await ctx.send(ctx.message.author.mention +
-                               " will probably die alone :(")
+        if str(ctx.message.author) == "Aries#666":
+                await ctx.send(ctx.message.author.mention + " ain't sexy at all.")
+        else:
+                if (i % 8) == 0:
+                        await ctx.send(ctx.message.author.mention + " is gay.")
+                elif (i % 8) == 1:
+                        await ctx.send(ctx.message.author.mention + " is straight.")
+                elif (i % 8) == 2:
+                        await ctx.send(ctx.message.author.mention + " is asexual.")
+                elif (i % 8) == 3:
+                        await ctx.send(ctx.message.author.mention + " is bisexual.")
+                elif (i % 8) == 4:
+                        await ctx.send(ctx.message.author.mention + " is closeted :0.")
+                elif (i % 8) == 5:
+                        await ctx.send(ctx.message.author.mention + " just came out!")
+                elif (i % 8) == 6:
+                        await ctx.send(ctx.message.author.mention + " is pan.")
+                elif (i % 8) == 7:
+                        await ctx.send(ctx.message.author.mention + " is sexy af.")
+                elif (i % 8) == 8:
+                        await ctx.send(ctx.message.author.mention +
+                                       " will probably die alone :(")
 
 
 @client.command()
@@ -101,12 +104,14 @@ async def mm(ctx):
 
 @client.command(aliases=["w"])
 async def win(ctx):
+        print(int(ctx.message.content[-1:]))
+        adjust(int(ctx.message.content[-1:]))
+        clearQueue()
         if ctx.message.content[-1:] != "0":
                 await ctx.send("Congrats Team " + ctx.message.content[-1:])
         else:
                 await ctx.send("My algorithm is so good, t"
                                "he teams were perfectly balanced.")
-        adjust(int(ctx.message.content[-1:]))
 
 
 ##@client.command(aliases=["testmatchmake"])
