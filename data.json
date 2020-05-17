@@ -3,14 +3,14 @@
         "support": 2800,
         "queue": "none",
         "team": -1,
-        "tank": 2500,
-        "dps": 2250
+        "tank": 2000,
+        "dps": 2150
     },
     "Immortis#6644": {
         "queue": "none",
         "team": -1,
-        "tank": 3000,
-        "support": 2400,
+        "tank": 2900,
+        "support": 2200,
         "dps": 2500
     },
     "Twang#8757": {
@@ -18,25 +18,28 @@
         "queue": "none",
         "team": -1,
         "dps": 3600,
-        "support": 3600
+        "support": 3700
     },
     "Timmy#3426": {
-        "dps": 4150,
-        "queue": "none",
-        "team": -1
-    },
-    "TheGlare#1451": {
-        "tank": 3500,
+        "dps": 4350,
         "queue": "none",
         "team": -1,
-        "support": 2800,
+        "tank": 3600,
+        "support": 3600
+    },
+    "TheGlare#1451": {
+        "tank": 3700,
+        "queue": "none",
+        "team": -1,
+        "support": 3000,
         "dps": 2800
     },
     "Scrub#1337": {
         "tank": 4000,
         "queue": "none",
         "team": -1,
-        "dps": 3000
+        "dps": 300,
+        "support": 4000
     },
     "Daniel9dsi#7793": {
         "support": 3200,
@@ -56,8 +59,8 @@
         "dps": 4000,
         "queue": "none",
         "team": -1,
-        "support": 3750,
-        "tank": 3750
+        "support": 3550,
+        "tank": 3650
     },
     "BubbLeS#4835": {
         "dps": 3600,
@@ -71,14 +74,14 @@
         "queue": "none",
         "team": -1,
         "tank": 2200,
-        "dps": 2000
+        "dps": 1300
     },
     "MusicalDuck#0138": {
         "support": 3000,
         "queue": "none",
         "team": -1,
         "tank": 2800,
-        "dps": 2700
+        "dps": 2800
     },
     "Aries#6666": {
         "support": 3900,
@@ -86,11 +89,11 @@
         "team": -1
     },
     "Panda#3239": {
-        "support": 3919,
+        "support": 4019,
         "queue": "none",
         "team": -1,
         "tank": 3600,
-        "dps": 3100
+        "dps": 3200
     },
     "Deal#0911": {
         "tank": 3800,
@@ -124,7 +127,7 @@
         "dps": 1300
     },
     "MeatofMeat#9866": {
-        "tank": 2400,
+        "tank": 2300,
         "queue": "none",
         "team": -1,
         "dps": 2100
@@ -135,10 +138,24 @@
         "team": -1
     },
     "StodgyMeteor#8420": {
-        "tank": 3336,
+        "tank": 3536,
         "queue": "none",
         "team": -1,
-        "dps": 3075,
-        "support": 3025
+        "dps": 2875,
+        "support": 3125
+    },
+    "Blu#9129": {
+        "support": 2400,
+        "queue": "none",
+        "team": -1,
+        "tank": 2300,
+        "dps": 1500
+    },
+    "SleepyBear#5604": {
+        "dps": 2800,
+        "queue": "none",
+        "team": -1,
+        "support": 2700,
+        "tank": 2800
     }
 }

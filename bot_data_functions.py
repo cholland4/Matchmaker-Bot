@@ -19,6 +19,8 @@ def loadPlayerData():
 
 
 playerData = loadPlayerData()
+numQueued = {"tank":0, "dps":0, "support":0}
+
 for player in playerData:
     playerData[player]["queue"] = "none"
     playerData[player]["team"] = -1
@@ -28,7 +30,9 @@ def clearQueue():
     for player in playerData:
         playerData[player]["queue"] = "none"
     savePlayerData(playerData)
-    numQueued = {"tank":0, "dps":0, "support":0}
+    for role in numQueued:
+        numQueued[role] = 0
+    return numQueued
     
 
 numQueued = clearQueue()
@@ -39,6 +43,7 @@ def queueFor(role, PlayerID):
         Sets the player's queued role to whatever they specified.
         Updates number of players queued for each role.
     '''
+    global numQueued
     deQueue(PlayerID)
     if role in playerData[PlayerID]:
         playerData[PlayerID]["queue"] = role
@@ -85,7 +90,6 @@ def tankQueued():
 def adjust(winner):
     global playerData
     playerData = loadPlayerData()
-    print(winner)
 
     if(winner != 0):
         for player in playerData:
@@ -111,6 +115,7 @@ def adjust(winner):
             playerData[player]["team"] = -1
             playerData[player]["queue"] = "none"
             savePlayerData(playerData)
+    clearQueue()
 
     #savePlayerData(playerData)
     #return playerData
@@ -142,6 +147,7 @@ def deQueue(PlayerID):
     ''' Removes the player from the queue.
         Updates number of players queued for each role.
     '''
+    global numQueued
     role = playerData[PlayerID]["queue"]
     playerData[PlayerID]["queue"] = "none"
     if role == "tank":
@@ -218,6 +224,7 @@ def printPlayerData(PlayerID):
 def printAllPlayerData():
     ''' Returns a formatted string with all user data.
     '''
+    playerData = loadPlayerData()
     message = ""
     for PlayerID in playerData.keys():
         message = message + printPlayerData(PlayerID) + "\n\n"

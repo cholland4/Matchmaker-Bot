@@ -11,9 +11,9 @@ client = commands.Bot(command_prefix = ".")
 async def on_ready():
         loadPlayerData()
         print("bot is ready")
-        # channel = client.get_channel(649125502233083905)
+        # channel = client.get_channel(708912394537009152)
         # command testing channel
-        # await channel.send("Yo its pugs time.")
+        # await channel.send("I'm getting bullied so y'all gotta do draft.")
         # print(clearPlayerData())
 
 
@@ -50,6 +50,21 @@ async def map(ctx):
 @client.command()
 async def mention(ctx):
         await ctx.send(ctx.message.author.mention)
+
+
+@client.command(aliases = ["dick", "size"])
+async def dicksize(ctx):
+        i = random.randint(300, 1200)
+        if str(ctx.message.author) == "Panda#3239":
+                i += 800
+        elif str(ctx.message.author) == "Timmy#3426":
+                i -= 300
+        elif str(ctx.message.author) == "Twang#8757":
+                i += 500
+        #        await ctx.send(ctx.message.author.mention + " has a massive dick.")
+        #else:
+        await ctx.send(ctx.message.author.mention + " has a "
+                       + str(i/100) + " inch dick.")
 
 
 @client.command(aliases=["bi", "pan"])
@@ -167,7 +182,7 @@ async def queue(ctx, role="none"):
                 await ctx.send(message)
 
 
-@client.command()
+@client.command(aliases=["role"])
 async def roles(ctx):
         message = "Roles Needed:\n"
         if tankQueued() != 0:
@@ -185,7 +200,6 @@ async def roles(ctx):
 async def leave(ctx):
         sender = str(ctx.message.author)
         message = deQueue(sender)
-        print(message)
         message = message + "Roles Needed:\n"
         if tankQueued() != 0:
                 message = message + (tankQueued() + " tanks.\n")
