@@ -24,15 +24,14 @@ for player in playerData:
     playerData[player]["team"] = -1
 
 def clearQueue():
+    global numQueued
     for player in playerData:
         playerData[player]["queue"] = "none"
     savePlayerData(playerData)
     numQueued = {"tank":0, "dps":0, "support":0}
     
-clearQueue()
 
-
-numQueued = {"tank":0, "dps":0, "support":0}
+numQueued = clearQueue()
 
 
 def queueFor(role, PlayerID):
@@ -50,7 +49,7 @@ def queueFor(role, PlayerID):
         elif role == "damage" or role == "dps":
             numQueued["dps"] += 1
             return ("Queued for dps.\n")
-        elif role == "support":
+        elif role == "support" or role == "supp":
             numQueued["support"] += 1
             return ("Queued for support.\n")
         elif role == "none":
@@ -84,25 +83,36 @@ def tankQueued():
 # winner must be either 0, 1, or 2
 # playerData is a hashtable of all players
 def adjust(winner):
+    global playerData
     playerData = loadPlayerData()
     print(winner)
-    
-    if(winner == 0):
-        return playerData
-    
-    for player in playerData.keys():
-        if(playerData[player]['team'] == winner):
-            print(playerData[player] + " t1")
-            role = playerData[player]['queue']
-            playerData[player][role] += 100
-        elif(playerData[player]['team'] != -1):
-            print(playerData[player] + " t2")
-            role = playerData[player]['queue']
-            playerData[player][role] -= 100
-        playerData[player]['team'] = -1
-        playerData[player]['queue'] = 'none'
 
-    savePlayerData(playerData)
+    if(winner != 0):
+        for player in playerData:
+            playerData = loadPlayerData()
+            if(playerData[player]["team"] == winner):
+                role = playerData[player]["queue"]
+                playerData[player][role] += 100
+##                if role == "tank":
+##                    playerData[player]["tank"] += 100
+##                elif role == "dps":
+##                    playerData[player]["dps"] += 100
+##                elif role == "support":
+##                    playerData[player]["support"] += 100
+            elif(playerData[player]["team"] != -1):
+                role = playerData[player]["queue"]
+                playerData[player][role] -= 100
+##                if role == "tank":
+##                    playerData[player]["tank"] -= 100
+##                elif role == "dps":
+##                    playerData[player]["dps"] -= 100
+##                elif role == "support":
+##                    playerData[player]["support"] -= 100
+            playerData[player]["team"] = -1
+            playerData[player]["queue"] = "none"
+            savePlayerData(playerData)
+
+    #savePlayerData(playerData)
     #return playerData
 
 
@@ -273,23 +283,29 @@ def printTeams(mmList):
     mmData = mmList[0]
     team1 = getTeam1(mmData)
     team2 = getTeam2(mmData)
-    teamA = "Team 1: Avg = " + str(mmList[1]) + "\n"
+    teamA = "```Team 1: Avg = " + str(mmList[1]) + "\n"
     teamB = "Team 2: Avg = " + str(mmList[2]) + "\n"
     for player in team1.keys():
-        if mmData[player]["queue"] == "support":
-            teamA = teamA + mmData[player]["queue"] + "\t\t\t"
-        else:
-            teamA = teamA + mmData[player]["queue"] + "\t\t\t\t"
         teamA = teamA + player
+        if mmData[player]["queue"] == "support":
+            teamA = teamA + (" " * (32-len(player))) + mmData[player]["queue"]
+        elif mmData[player]["queue"] == "dps":
+            teamA = teamA + (" " * (32-len(player)))+ mmData[player]["queue"]
+        else:
+            teamA = teamA + (" " * (32-len(player)))+ mmData[player]["queue"]
+        
         teamA = teamA + "\n"
     for player in team2.keys():
-        if mmData[player]["queue"] == "support":
-            teamB = teamB + mmData[player]["queue"] + "\t\t\t"
-        else:
-            teamB = teamB + mmData[player]["queue"] + "\t\t\t\t"
         teamB = teamB + player
+        if mmData[player]["queue"] == "support":
+            teamB = teamB + (" " * (32-len(player))) + mmData[player]["queue"]
+        elif mmData[player]["queue"] == "dps":
+            teamB = teamB + (" " * (32-len(player))) + mmData[player]["queue"]
+        else:
+            teamB = teamB + (" " * (32-len(player)))+ mmData[player]["queue"]
+        
         teamB = teamB + "\n"
-    message = "\n" + teamA + "\n" + teamB
+    message = "\n" + (teamA) + "\n" + (teamB) + "```"
     return message
 
 

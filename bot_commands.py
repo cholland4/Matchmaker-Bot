@@ -34,7 +34,7 @@ def matchmake(playerData):
         if playerData[i]['queue'] != 'none':
             queued += 1
     if queued < 12:
-        return -1
+        return [-1, -1]
     
     roles = split(playerData)
     

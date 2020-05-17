@@ -11,9 +11,9 @@ client = commands.Bot(command_prefix = ".")
 async def on_ready():
         loadPlayerData()
         print("bot is ready")
-        # channel = client.get_channel(707749690396901508)
+        # channel = client.get_channel(649125502233083905)
         # command testing channel
-        # await channel.send("Bot Restarted.")
+        # await channel.send("Yo its pugs time.")
         # print(clearPlayerData())
 
 
@@ -54,29 +54,44 @@ async def mention(ctx):
 
 @client.command(aliases=["bi", "pan"])
 async def gay(ctx):
-        i = random.randint(0,8)
+        i = random.randint(0,89)
         if str(ctx.message.author) == "Aries#666":
                 await ctx.send(ctx.message.author.mention + " ain't sexy at all.")
+        elif str(ctx.message.author) == "Panda#3239":
+                await ctx.send(ctx.message.author.mention + "is bi.")
+        elif str(ctx.message.author) == "StodgyMeteor#8420":
+                await ctx.send(ctx.message.author.mention + "is a bad torb.")
         else:
-                if (i % 8) == 0:
-                        await ctx.send(ctx.message.author.mention + " is gay.")
-                elif (i % 8) == 1:
-                        await ctx.send(ctx.message.author.mention + " is straight.")
-                elif (i % 8) == 2:
-                        await ctx.send(ctx.message.author.mention + " is asexual.")
-                elif (i % 8) == 3:
-                        await ctx.send(ctx.message.author.mention + " is bisexual.")
-                elif (i % 8) == 4:
-                        await ctx.send(ctx.message.author.mention + " is closeted :0.")
-                elif (i % 8) == 5:
-                        await ctx.send(ctx.message.author.mention + " just came out!")
-                elif (i % 8) == 6:
-                        await ctx.send(ctx.message.author.mention + " is pan.")
-                elif (i % 8) == 7:
-                        await ctx.send(ctx.message.author.mention + " is sexy af.")
-                elif (i % 8) == 8:
+                if (i % 9) == 0:
+                        await ctx.send(ctx.message.author.mention +
+                                       " is gay.")
+                elif (i % 9) == 1:
+                        await ctx.send(ctx.message.author.mention +
+                                       " is straight.")
+                elif (i % 9) == 2:
+                        await ctx.send(ctx.message.author.mention +
+                                       " is asexual.")
+                elif (i % 9) == 3:
+                        await ctx.send(ctx.message.author.mention +
+                                       " is bi.")
+                elif (i % 9) == 4:
+                        await ctx.send(ctx.message.author.mention +
+                                       " is closeted :0.")
+                elif (i % 9) == 5:
+                        await ctx.send(ctx.message.author.mention +
+                                       " just came out!")
+                elif (i % 9) == 6:
+                        await ctx.send(ctx.message.author.mention +
+                                       " is pan.")
+                elif (i % 9) == 7:
+                        await ctx.send(ctx.message.author.mention +
+                                       " is sexy af.")
+                elif (i % 9) == 8:
                         await ctx.send(ctx.message.author.mention +
                                        " will probably die alone :(")
+                elif (i % 9) == 9:
+                        await ctx.send(ctx.message.author.mention +
+                                       " Error 404: Sexuality not found.")
 
 
 @client.command()
@@ -95,23 +110,23 @@ async def commands(ctx):
 async def mm(ctx):
         mylist = getAllPlayerData()
         matchList = matchmake(mylist)
-        if matchList[0] == -1:
-                await ctx.send("Not enough players queued.")
-        else:
+        if matchList[0] != -1:
                 await ctx.send(printTeams(matchList))
                 savePlayerData(matchList[0])
+        else:
+                await ctx.send("Error encountered. Are enough players queued?")
+        
         
 
 @client.command(aliases=["w"])
 async def win(ctx):
-        print(int(ctx.message.content[-1:]))
         adjust(int(ctx.message.content[-1:]))
-        clearQueue()
         if ctx.message.content[-1:] != "0":
                 await ctx.send("Congrats Team " + ctx.message.content[-1:])
         else:
                 await ctx.send("My algorithm is so good, t"
                                "he teams were perfectly balanced.")
+        clearQueue()
 
 
 ##@client.command(aliases=["testmatchmake"])

@@ -14,11 +14,11 @@
         "dps": 2500
     },
     "Twang#8757": {
-        "tank": 4300,
+        "tank": 4100,
         "queue": "none",
         "team": -1,
-        "dps": 3700,
-        "support": 3500
+        "dps": 3600,
+        "support": 3600
     },
     "Timmy#3426": {
         "dps": 4150,
@@ -124,8 +124,21 @@
         "dps": 1300
     },
     "MeatofMeat#9866": {
-        "tank": 2770,
+        "tank": 2400,
+        "queue": "none",
+        "team": -1,
+        "dps": 2100
+    },
+    "wittlebull#1033": {
+        "support": 2600,
         "queue": "none",
         "team": -1
+    },
+    "StodgyMeteor#8420": {
+        "tank": 3336,
+        "queue": "none",
+        "team": -1,
+        "dps": 3075,
+        "support": 3025
     }
 }
