@@ -1,3 +1,5 @@
 
 .gitattributes
 *.pyc
+matchmakingbot.pem
+test_data.json
