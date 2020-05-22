@@ -3,6 +3,7 @@ import random
 from discord.ext import commands
 from bot_data_functions import *
 from bot_commands import *
+from discord import ChannelType
 
 client = commands.Bot(command_prefix = ".")
 
@@ -23,6 +24,50 @@ async def on_ready():
 ##    mystr = message.content
 ##    sender = str(message.author)
 ##    await client.process_commands(message)
+
+
+@client.command(aliases=["mtt"])
+async def move_to_teams(ctx):
+        draft_channel = client.get_channel(709248862828888074)
+        channel1 = client.get_channel(707749575108198441)
+        channel2 = client.get_channel(707749630728732712)
+        pdata = loadPlayerData()
+        team1 = get_t1_id(pdata)
+        team2 = get_t2_id(pdata)
+        sender = ctx.message.author
+        #print(type(sender))
+        #await sender.move_to(channel2)
+        num_moved = 0
+        for member in ctx.message.guild.members:
+                if member.id in team1:
+                        if member in draft_channel.members:
+                                await member.move_to(channel1)
+                                num_moved += 1
+                elif member.id in team2:
+                        if member in draft_channel.members:
+                                await member.move_to(channel2)
+                                num_moved += 1
+        await ctx.send("{} users moved.".format(num_moved))
+
+@client.command(aliases=["mtd"])
+async def move_to_draft(ctx):
+        ## ## MatchMaking Bot Testing channel IDs
+        #draft_channel = client.get_channel(709248862828888074)
+        #channel1 = client.get_channel(707749575108198441)
+        #channel2 = client.get_channel(707749630728732712)
+
+        ## ## We Use this channel IDs
+        draft_channel = client.get_channel(652717496045928458)
+        channel1 = client.get_channel(647667378334990377)
+        channel2 = client.get_channel(647667443782909955)
+        num_moved = 0
+        for member in channel1.members:
+                await member.move_to(draft_channel)
+                num_moved += 1
+        for member in channel2.members:
+                await member.move_to(draft_channel)
+                num_moved += 1
+        await ctx.send("{} users moved.".format(num_moved))
 
 
 @client.command()
@@ -158,7 +203,8 @@ async def win(ctx):
 async def update(ctx):
         mystr = ctx.message.content
         sender = str(ctx.message.author)
-        if updatePlayerData(mystr, sender):
+        discord_id = ctx.message.author.id
+        if updatePlayerData(mystr, sender, discord_id):
                 await ctx.send("Added!")
         else:
                 await ctx.send("Please enter a valid integer.")

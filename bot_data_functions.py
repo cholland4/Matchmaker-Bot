@@ -162,7 +162,7 @@ def deQueue(PlayerID):
 
     
 #good work gang
-def updatePlayerData(mystr, PlayerID):
+def updatePlayerData(mystr, PlayerID, discord_id):
     ''' Updates the hashmap of PlayerID's data.
     '''
     userData = mystr.split()
@@ -182,6 +182,8 @@ def updatePlayerData(mystr, PlayerID):
         playerData[PlayerID]["tank"] = sr
     playerData[PlayerID]["queue"] = "none"
     playerData[PlayerID]["team"] = -1
+    if "id" not in playerData[PlayerID].keys():
+        playerData[PlayerID]["id"] = discord_id
     # print(playerData)
     savePlayerData(playerData)
     return True
@@ -321,3 +323,18 @@ def getPlayerTeam(playerID):
     team = str(playerData[playerID]["team"])
     return team
 
+
+def get_t1_id(playerData):
+    team1 = []
+    for player in playerData.keys():
+        if playerData[player]["team"] == 1:
+            team1.append(playerData[player]["id"])
+    return team1
+
+
+def get_t2_id(playerData):
+    team2 = []
+    for player in playerData.keys():
+        if playerData[player]["team"] == 2:
+            team2.append(playerData[player]["id"])
+    return team2
