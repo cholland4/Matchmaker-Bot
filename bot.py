@@ -24,23 +24,6 @@ async def on_ready():
 ##    await client.process_commands(message)
 
 
-@client.command()
-async def setsr(ctx):
-        if ctx.message.author.id == 176510548702134273:
-                content = str(ctx.message.content)
-                if content[7] == "s":
-                        mystr = ".support " + content[:-4]
-                elif content[7] == "d":
-                        mystr = ".dps " + content[:-4]
-                elif content[7] == "t":
-                        mystr = ".tank " + content[:-4]
-                user = str(ctx.message.mentions[0])
-                discord_id = ctx.message.mentions[0].id
-                updatePlayerData(mystr, user, discord_id)
-        else:
-                await ctx.send("You do not have permission to use this command.")
-
-
 @client.command(aliases=["mtt"])
 #@commands.has_role('BotMaster')
 async def move_to_teams(ctx):
