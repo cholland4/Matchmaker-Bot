@@ -1,10 +1,107 @@
 {
     "Archangel#0346": {
-        "support": 2400,
+        "support": 2500,
         "queue": "none",
         "team": -1,
-        "tank": 2200,
+        "tank": 2700,
         "dps": 2150,
         "id": 176510548702134273
+    },
+    "TheGlare#1451": {
+        "tank": 3850,
+        "queue": "tank",
+        "team": 1,
+        "id": 176550035994050560,
+        "support": 2800,
+        "dps": 2800
+    },
+    "airyqe#5154": {
+        "dps": 3900,
+        "queue": "dps",
+        "team": 1,
+        "id": 219510602379296769,
+        "tank": 3850,
+        "support": 3750
+    },
+    "Duncanator02#5596": {
+        "support": 2700,
+        "queue": "support",
+        "team": 1,
+        "id": 364167513971621890,
+        "tank": 2300,
+        "dps": 2100
+    },
+    "MusicalDuck#0138": {
+        "tank": 2500,
+        "queue": "tank",
+        "team": 2,
+        "id": 388171533589282816,
+        "dps": 3000,
+        "support": 3100
+    },
+    "Timmy#3426": {
+        "dps": 4150,
+        "queue": "dps",
+        "team": 2,
+        "id": 345366715279867906
+    },
+    "Panda#3239": {
+        "support": 4319,
+        "queue": "support",
+        "team": 1,
+        "id": 238471482009714688,
+        "tank": 3617,
+        "dps": 3100
+    },
+    "Scrub#1337": {
+        "tank": 3900,
+        "queue": "support",
+        "team": 2,
+        "id": 208397981437788170,
+        "dps": 3300,
+        "support": 3800
+    },
+    "Aries#0666": {
+        "support": 3800,
+        "queue": "support",
+        "team": 2,
+        "id": 256972883404783616
+    },
+    "MeatofMeat#9866": {
+        "tank": 2670,
+        "queue": "none",
+        "team": -1,
+        "id": 208449704021852170,
+        "dps": 2300
+    },
+    "StodgyMeteor#8420": {
+        "dps": 2875,
+        "queue": "dps",
+        "team": 2,
+        "id": 318093722518814721,
+        "tank": 3336,
+        "support": 3007
+    },
+    "Twang#8757": {
+        "tank": 4060,
+        "queue": "tank",
+        "team": 2,
+        "id": 176500074543710210,
+        "dps": 3800,
+        "support": 3600
+    },
+    "Immortis#6644": {
+        "tank": 3000,
+        "queue": "tank",
+        "team": 1,
+        "id": 317076692462206978,
+        "dps": 2600,
+        "support": 2600
+    },
+    "Tyrell#2579": {
+        "dps": 3333,
+        "queue": "dps",
+        "team": 1,
+        "id": 293888103289061376
     }
 }
