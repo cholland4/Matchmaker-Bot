@@ -24,58 +24,89 @@ async def on_ready():
 ##    await client.process_commands(message)
 
 
+@client.command()
+async def setsr(ctx):
+        if ctx.message.author.id == 176510548702134273:
+                content = str(ctx.message.content)
+                if content[7] == "s":
+                        mystr = ".support " + content[:-4]
+                elif content[7] == "d":
+                        mystr = ".dps " + content[:-4]
+                elif content[7] == "t":
+                        mystr = ".tank " + content[:-4]
+                user = str(ctx.message.mentions[0])
+                discord_id = ctx.message.mentions[0].id
+                updatePlayerData(mystr, user, discord_id)
+        else:
+                await ctx.send("You do not have permission to use this command.")
+
+
 @client.command(aliases=["mtt"])
+#@commands.has_role('BotMaster')
 async def move_to_teams(ctx):
         ''' Moves people on teams to the specific team channel from the draft
                 channel.
         '''
-        ## ## MatchMaking Bot Testing channel IDs
-        ##draft_channel = client.get_channel(709248862828888074)
-        ##channel1 = client.get_channel(707749575108198441)
-        ##channel2 = client.get_channel(707749630728732712)
+        if ctx.message.author.id == 176510548702134273:
+                try:
+                        ## ## MatchMaking Bot Testing channel IDs
+                        if ctx.message.guild.id == 651200164169777154:
+                                draft_channel = client.get_channel(709248862828888074)
+                                channel1 = client.get_channel(707749575108198441)
+                                channel2 = client.get_channel(707749630728732712)
 
-        ## ## We Use this channel IDs
-        draft_channel = client.get_channel(652717496045928458)
-        channel1 = client.get_channel(647667378334990377)
-        channel2 = client.get_channel(647667443782909955)
-        
-        pdata = loadPlayerData()
-        team1 = get_t1_id(pdata)
-        team2 = get_t2_id(pdata)
-        sender = ctx.message.author
-        num_moved = 0
-        for member in ctx.message.guild.members:
-                if member.id in team1:
-                        if member in draft_channel.members:
-                                await member.move_to(channel1)
-                                num_moved += 1
-                elif member.id in team2:
-                        if member in draft_channel.members:
-                                await member.move_to(channel2)
-                                num_moved += 1
-        await ctx.send("{} users moved.".format(num_moved))
+                        ## ## We Use this channel IDs
+                        if ctx.message.guild.id == 442813167148728330:
+                                draft_channel = client.get_channel(652717496045928458)
+                                channel1 = client.get_channel(647667378334990377)
+                                channel2 = client.get_channel(647667443782909955)
+                        
+                        pdata = loadPlayerData()
+                        team1 = get_t1_id(pdata)
+                        team2 = get_t2_id(pdata)
+                        sender = ctx.message.author
+                        num_moved = 0
+                        for member in ctx.message.guild.members:
+                                if member.id in team1:
+                                        if member in draft_channel.members:
+                                                print(member)
+                                                await member.move_to(channel1)
+                                                num_moved += 1
+                                elif member.id in team2:
+                                        if member in draft_channel.members:
+                                                print(member)
+                                                await member.move_to(channel2)
+                                                num_moved += 1
+                        #await ctx.send("{} users moved.".format(num_moved))
+                except:
+                        await ctx.send("You do not have permission to use this command.")
 
 @client.command(aliases=["mtd"])
+#@commands.has_role('BotMaster')
 async def move_to_draft(ctx):
         ''' Moves all users from the team channels to the draft channel.
         '''
-        ## ## MatchMaking Bot Testing channel IDs
-        ##draft_channel = client.get_channel(709248862828888074)
-        ##channel1 = client.get_channel(707749575108198441)
-        ##channel2 = client.get_channel(707749630728732712)
+        if ctx.message.author.id == 176510548702134273:
+                ## ## MatchMaking Bot Testing channel IDs
+                if ctx.message.guild.id == 651200164169777154:
+                        draft_channel = client.get_channel(709248862828888074)
+                        channel1 = client.get_channel(707749575108198441)
+                        channel2 = client.get_channel(707749630728732712)
 
-        ## ## We Use this channel IDs
-        draft_channel = client.get_channel(652717496045928458)
-        channel1 = client.get_channel(647667378334990377)
-        channel2 = client.get_channel(647667443782909955)
-        num_moved = 0
-        for member in channel1.members:
-                await member.move_to(draft_channel)
-                num_moved += 1
-        for member in channel2.members:
-                await member.move_to(draft_channel)
-                num_moved += 1
-        await ctx.send("{} users moved.".format(num_moved))
+                ## ## We Use this channel IDs
+                if ctx.message.guild.id == 442813167148728330:
+                        draft_channel = client.get_channel(652717496045928458)
+                        channel1 = client.get_channel(647667378334990377)
+                        channel2 = client.get_channel(647667443782909955)
+                        
+                num_moved = 0
+                for member in channel1.members:
+                        await member.move_to(draft_channel)
+                        num_moved += 1
+                for member in channel2.members:
+                        await member.move_to(draft_channel)
+                        num_moved += 1
+                #await ctx.send("{} users moved.".format(num_moved))
 
 
 @client.command()
@@ -118,13 +149,17 @@ async def dicksize(ctx):
         ''' Randomly assigns a number in inches, specific users have earned a
                 modifier.
         '''
-        i = random.randint(300, 1200)
+        i = random.randint(321, 987)
         if str(ctx.message.author) == "Panda#3239":
-                i += 800
+                i += 2000
         elif str(ctx.message.author) == "Timmy#3426":
-                i -= 300
+                i += 30
         elif str(ctx.message.author) == "Twang#8757":
-                i += 500
+                i -= 321
+        elif str(ctx.message.author) == "StodgyMeteor#8420":
+                i -= 250
+        elif str(ctx.message.author) == "Archangel#0346":
+                i += 850
         #        await ctx.send(ctx.message.author.mention + " has a massive dick.")
         #else:
         await ctx.send(ctx.message.author.mention + " has a "
@@ -180,13 +215,13 @@ async def commands(ctx):
         ''' Prints working commands.
         '''
         string1 = """To input your SR, please use the following commands:
-        .tank <SR>\n.dps <SR>\n.support <SR>
+        \n.tank SR\n.dps SR\n.support SR
         \nTo see your SR, use .sr
-        \nTo queue for a role, use .q <role>\nTo see the current queue, use .q
+        \nTo queue for a role, use .q role\nTo see the current queue, use .q
         \nTo see what you are queued for, use .status
         \nTo see the roles needed to make a match, use .roles
         \nTo begin matchmaking, use .mm
-        \nTo report the winning team, use.win <1/2>
+        \nTo report the winning team, use.win 1/2
         \nIn case of a tie, use .win 0"""
         """
         \nTo move users to team channels after matchmaking, use .mtt
