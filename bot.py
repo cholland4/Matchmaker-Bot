@@ -4,6 +4,7 @@ from discord.ext import commands
 from bot_data_functions import *
 from bot_commands import *
 from discord import ChannelType
+import asyncio
 
 client = commands.Bot(command_prefix = ".")
 
@@ -16,6 +17,23 @@ async def on_ready():
         print("bot is ready")
 
 
+@client.command(aliases=["pugs"])
+async def schedule(ctx, time, metric):
+        for i in ctx.message.guild.roles:
+                if str(i) == "Puggers":
+                        role = i
+        if metric.lower() == "s":
+                await asyncio.sleep(int(time))
+        elif metric.lower() == "m":
+                await asyncio.sleep(int(time) * 60)
+        elif metric.lower() == "h":
+                await asyncio.sleep(int(time) * 60 * 60)
+        try:
+                await ctx.send(role.mention + " the time for pugs is upon us!")
+        except:
+                await ctx.send("It's pugs time!")
+
+        
 ##@client.event
 ##async def on_message(message):
 ##    channel = message.channel
@@ -246,6 +264,7 @@ async def mm(ctx):
         matchList = matchmake(mylist)
         if matchList[0] != -1:
                 await ctx.send(printTeams(matchList))
+                await client.change_presence(activity=discord.Game(name="a match"))
                 savePlayerData(matchList[0])
                 await ctx.send(randomMap())
         else:
@@ -264,6 +283,7 @@ async def win(ctx):
                 await ctx.send("My algorithm is so good, t"
                                "he teams were perfectly balanced.")
         clearQueue()
+        await client.change_presence(activity=discord.Game(name=""))
 
 
 @client.command(aliases=["support", "supp", "tank", "damage", "dps"])
