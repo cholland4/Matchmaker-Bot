@@ -24,6 +24,15 @@ async def on_ready():
 ##    await client.process_commands(message)
 
 
+@client.command()
+async def shock(ctx):
+        await ctx.send("Shock did it without sinatraa fuck all " +
+                       "yall that doubted and said super is a benched player."
+                       + " Thank you for reading my PSA have a good night see "
+                       + "you guys for pugs")
+
+
+
 @client.command(aliases=["mtt"])
 #@commands.has_role('BotMaster')
 async def move_to_teams(ctx):
@@ -52,14 +61,11 @@ async def move_to_teams(ctx):
                         for member in ctx.message.guild.members:
                                 if member.id in team1:
                                         if member in draft_channel.members:
-                                                print(member)
                                                 await member.move_to(channel1)
                                                 num_moved += 1
                                 elif member.id in team2:
-                                        if member in draft_channel.members:
-                                                print(member)
-                                                await member.move_to(channel2)
-                                                num_moved += 1
+                                        if member in draft_channel.members:                                                await member.move_to(channel2)
+                                        num_moved += 1
                         #await ctx.send("{} users moved.".format(num_moved))
                 except:
                         await ctx.send("You do not have permission to use this command.")
@@ -117,7 +123,10 @@ async def team(ctx):
 async def map(ctx):
         ''' Sends a random map.
         '''
-        await ctx.send(randomMap())
+        if str(ctx.message.author) == "TheGlare#1451":
+                await ctx.send("King's Row")
+        else:
+                await ctx.send(randomMap())
 
 
 @client.command()
@@ -135,62 +144,77 @@ async def dicksize(ctx):
         i = random.randint(321, 987)
         if str(ctx.message.author) == "Panda#3239":
                 i += 2000
+                message = str(i/100) + " mile dick."
         elif str(ctx.message.author) == "Timmy#3426":
                 i += 30
+                message = str(i/100) + " inch dick."
         elif str(ctx.message.author) == "Twang#8757":
                 i -= 321
+                message = str(i/100) + " inch dick."
         elif str(ctx.message.author) == "StodgyMeteor#8420":
                 i -= 250
+                message = str(i/100) + " inch dick."
         elif str(ctx.message.author) == "Archangel#0346":
                 i += 850
+                message = str(i/100) + " inch dick."
+        elif str(ctx.message.author) == "Aries#0666":
+                i -= 321
+                message = str(i/100) + " yard dick."
+        elif str(ctx.message.author) == "BubbLeS#4835":
+                message = "dick beyond human comprehension."
+        else:
+                message = str(i/100) + " inch dick."
         #        await ctx.send(ctx.message.author.mention + " has a massive dick.")
         #else:
         await ctx.send(ctx.message.author.mention + " has a "
-                       + str(i/100) + " inch dick.")
+                       + message)
 
 
 @client.command(aliases=["bi", "pan"])
 async def gay(ctx):
         ''' Randomly assigns the user a sexuality. Not always random.
         '''
-        i = random.randint(0,89)
-        if str(ctx.message.author) == "Aries#666":
-                await ctx.send(ctx.message.author.mention + " ain't sexy at all.")
+        i = random.randint(0,100)
+        if str(ctx.message.author) == "Aries#0666":
+                await ctx.send(ctx.message.author.mention + " is a mercy main.")
         elif str(ctx.message.author) == "Panda#3239":
-                await ctx.send(ctx.message.author.mention + "is bi.")
+                await ctx.send(ctx.message.author.mention + " is bi.")
         elif str(ctx.message.author) == "StodgyMeteor#8420":
-                await ctx.send(ctx.message.author.mention + "is a bad torb.")
+                await ctx.send(ctx.message.author.mention + " is a bad torb.")
         else:
-                if (i % 9) == 0:
+                if (i % 11) == 0:
                         await ctx.send(ctx.message.author.mention +
                                        " is gay.")
-                elif (i % 9) == 1:
+                elif (i % 11) == 1:
                         await ctx.send(ctx.message.author.mention +
                                        " is straight.")
-                elif (i % 9) == 2:
+                elif (i % 11) == 2:
                         await ctx.send(ctx.message.author.mention +
                                        " is asexual.")
-                elif (i % 9) == 3:
+                elif (i % 11) == 3:
                         await ctx.send(ctx.message.author.mention +
                                        " is bi.")
-                elif (i % 9) == 4:
+                elif (i % 11) == 4:
                         await ctx.send(ctx.message.author.mention +
                                        " is closeted :0.")
-                elif (i % 9) == 5:
+                elif (i % 10) == 5:
                         await ctx.send(ctx.message.author.mention +
                                        " just came out!")
-                elif (i % 9) == 6:
+                elif (i % 11) == 6:
                         await ctx.send(ctx.message.author.mention +
                                        " is pan.")
-                elif (i % 9) == 7:
+                elif (i % 11) == 7:
                         await ctx.send(ctx.message.author.mention +
                                        " is sexy af.")
-                elif (i % 9) == 8:
+                elif (i % 11) == 8:
                         await ctx.send(ctx.message.author.mention +
                                        " will probably die alone :(")
-                elif (i % 9) == 9:
+                elif (i % 11) == 9:
                         await ctx.send(ctx.message.author.mention +
                                        " Error 404: Sexuality not found.")
+                elif (i % 11) == 10:
+                        await ctx.send(ctx.message.author.mention +
+                                       " is a furry.")
 
 
 @client.command()
