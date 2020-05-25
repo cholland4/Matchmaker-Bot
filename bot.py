@@ -19,19 +19,20 @@ async def on_ready():
 
 @client.command(aliases=["pugs"])
 async def schedule(ctx, time, metric):
-        for i in ctx.message.guild.roles:
-                if str(i) == "Puggers":
-                        role = i
-        if metric.lower() == "s":
-                await asyncio.sleep(int(time))
-        elif metric.lower() == "m":
-                await asyncio.sleep(int(time) * 60)
-        elif metric.lower() == "h":
-                await asyncio.sleep(int(time) * 60 * 60)
-        try:
-                await ctx.send(role.mention + " the time for pugs is upon us!")
-        except:
-                await ctx.send("It's pugs time!")
+        if ctx.message.author.id == 176510548702134273:
+                for i in ctx.message.guild.roles:
+                        if str(i) == "Puggers":
+                                role = i
+                if metric.lower() == "s":
+                        await asyncio.sleep(int(time))
+                elif metric.lower() == "m":
+                        await asyncio.sleep(int(time) * 60)
+                elif metric.lower() == "h":
+                        await asyncio.sleep(int(time) * 60 * 60)
+                try:
+                        await ctx.send(role.mention + " the time for pugs is upon us!")
+                except:
+                        await ctx.send("It's pugs time!")
 
         
 ##@client.event
@@ -117,6 +118,26 @@ async def move_to_draft(ctx):
 
 
 @client.command()
+async def captains(ctx):
+        ## ## MatchMaking Bot Testing channel IDs
+        if ctx.message.guild.id == 651200164169777154:
+                draft_channel = client.get_channel(709248862828888074)
+
+        ## ## We Use this channel IDs
+        if ctx.message.guild.id == 442813167148728330:
+                draft_channel = client.get_channel(652717496045928458)
+
+        print(draft_channel.members)
+        i = random.randint(0, len(draft_channel.members))
+        j = random.randint(0, len(draft_channel.members))
+        while i == j:
+                j = random.randint(0, len(draft_channel.members))
+        await ctx.send(draft_channel.members[i].mention + " " +
+                       draft_channel.members[j].mention +
+                       " are your captains.")
+
+
+@client.command()
 async def ping(ctx):
         ''' Returns the bot's ping.
         '''
@@ -162,7 +183,7 @@ async def dicksize(ctx):
         i = random.randint(321, 987)
         if str(ctx.message.author) == "Panda#3239":
                 i += 2000
-                message = str(i/100) + " mile dick."
+                message = "dick?"#str(i/100) + " nanometer dick."
         elif str(ctx.message.author) == "Timmy#3426":
                 i += 30
                 message = str(i/100) + " inch dick."

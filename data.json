@@ -1,14 +1,14 @@
 {
     "Archangel#0346": {
-        "support": 2400,
+        "support": 2550,
         "queue": "none",
         "team": -1,
-        "tank": 2700,
+        "tank": 2500,
         "dps": 2250,
         "id": 176510548702134273
     },
     "TheGlare#1451": {
-        "tank": 3750,
+        "tank": 3650,
         "queue": "none",
         "team": -1,
         "id": 176550035994050560,
@@ -24,7 +24,7 @@
         "support": 3750
     },
     "Duncanator02#5596": {
-        "support": 2600,
+        "support": 2550,
         "queue": "none",
         "team": -1,
         "id": 364167513971621890,
@@ -40,32 +40,35 @@
         "support": 3200
     },
     "Timmy#3426": {
-        "dps": 4250,
+        "dps": 4350,
         "queue": "none",
         "team": -1,
-        "id": 345366715279867906
+        "id": 345366715279867906,
+        "tank": 3550,
+        "support": 3800
     },
     "Panda#3239": {
-        "support": 4219,
+        "support": 3950,
         "queue": "none",
         "team": -1,
         "id": 238471482009714688,
-        "tank": 3717,
-        "dps": 3000
+        "tank": 3767,
+        "dps": 3050
     },
     "Scrub#1337": {
-        "tank": 3900,
+        "tank": 3950,
         "queue": "none",
         "team": -1,
         "id": 208397981437788170,
-        "dps": 3300,
-        "support": 3900
+        "dps": 3350,
+        "support": 3950
     },
     "Aries#0666": {
         "support": 2200,
         "queue": "none",
         "team": -1,
-        "id": 256972883404783616
+        "id": 256972883404783616,
+        "tank": 4600
     },
     "MeatofMeat#9866": {
         "tank": 2670,
@@ -83,7 +86,7 @@
         "support": 3007
     },
     "Twang#8757": {
-        "tank": 4260,
+        "tank": 4160,
         "queue": "none",
         "team": -1,
         "id": 176500074543710210,
@@ -95,7 +98,7 @@
         "queue": "none",
         "team": -1,
         "id": 317076692462206978,
-        "dps": 2600,
+        "dps": 2650,
         "support": 2600
     },
     "Tyrell#2579": {
@@ -112,7 +115,7 @@
         "id": 218496623720923138
     },
     "sb13sb(Sam Bolen)#5999": {
-        "tank": 2004,
+        "tank": 1954,
         "queue": "none",
         "team": -1,
         "id": 185875006973149185,
@@ -123,5 +126,33 @@
         "queue": "none",
         "team": -1,
         "id": 318332509790142464
+    },
+    "ceziun#0451": {
+        "tank": 4450,
+        "queue": "none",
+        "team": -1,
+        "id": 258672823332110337,
+        "dps": 4100,
+        "support": 4400
+    },
+    "neumann147#1880": {
+        "support": 3050,
+        "queue": "none",
+        "team": -1,
+        "id": 200113849695862784
+    },
+    "riptide#2016": {
+        "support": 3608,
+        "queue": "none",
+        "team": -1,
+        "id": 364172987026374667
+    },
+    "BubbLeS#4835": {
+        "tank": 3500,
+        "queue": "none",
+        "team": -1,
+        "id": 121008570224345088,
+        "dps": 3350,
+        "support": 3500
     }
 }
