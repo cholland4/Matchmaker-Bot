@@ -25,6 +25,7 @@ for player in playerData:
     playerData[player]["queue"] = "none"
     playerData[player]["team"] = -1
 
+
 def clearQueue():
     ''' Clears the number of players queued and empties the queue.
     '''
