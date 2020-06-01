@@ -2,3 +2,4 @@
 .gitattributes
 *.pyc
 test_data.json
+mmBotKey.pem
