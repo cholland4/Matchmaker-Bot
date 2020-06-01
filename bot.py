@@ -19,60 +19,59 @@ async def on_ready():
 
 
 @client.command(aliases=["pugs"])
-#@commands.has_role('Scheduler')
+@commands.has_role('Scheduler')
 async def schedule(ctx, time, metric):
-        if ctx.message.author.id == 176510548702134273:
-                now = datetime.datetime.now()
-                sleep_timer = 0
-                
-                if metric.lower() == "s":
-                        sleep_timer = int(time)
-                elif metric.lower() == "m":
-                        sleep_timer = int(time) * 60
-                elif metric.lower() == "h":
-                        sleep_timer = int(time) * 60 * 60
-                
-                for i in ctx.message.guild.roles:
-                        if str(i) == "Puggers":
-                                role = i
-                pugs_time = (now +
-                             datetime.timedelta(seconds =
-                                                sleep_timer)).strftime("%H:%M")
-                try:
-                        poll = await ctx.send(
-                                              ", react if you're down " +
-                                              "for pugs at " + pugs_time +
-                                              " PST.")
-                except:
-                        poll = await ctx.send("React if you're down for pugs" +
-                                              " at " + pugs_time + " PST.")
-                   
-                check = '✅'
-                await poll.add_reaction(check)
-                  
-                await asyncio.sleep(sleep_timer)
+        now = datetime.datetime.now()
+        sleep_timer = 0
+        
+        if metric.lower() == "s":
+                sleep_timer = int(time)
+        elif metric.lower() == "m":
+                sleep_timer = int(time) * 60
+        elif metric.lower() == "h":
+                sleep_timer = int(time) * 60 * 60
+        
+        for i in ctx.message.guild.roles:
+                if str(i) == "Puggers":
+                        role = i
+        pugs_time = (now +
+                     datetime.timedelta(seconds =
+                                        sleep_timer)).strftime("%H:%M")
+        try:
+                poll = await ctx.send(
+                                      ", react if you're down " +
+                                      "for pugs at " + pugs_time +
+                                      " PST.")
+        except:
+                poll = await ctx.send("React if you're down for pugs" +
+                                      " at " + pugs_time + " PST.")
+           
+        check = '✅'
+        await poll.add_reaction(check)
+          
+        await asyncio.sleep(sleep_timer)
 
-                try:
-                        cache_poll = await ctx.fetch_message(poll.id)
-                        
-                        num_puggers = 0
-                        for reaction in cache_poll.reactions:
-                                if str(reaction) == check:
-                                        num_puggers = reaction.count - 1
+        try:
+                cache_poll = await ctx.fetch_message(poll.id)
+                
+                num_puggers = 0
+                for reaction in cache_poll.reactions:
+                        if str(reaction) == check:
+                                num_puggers = reaction.count - 1
 
-                        if num_puggers > 12:
-                                try:
-                                        await ctx.send(
-                                               " the time for pugs is upon us!")
-                                except:
-                                        await ctx.send("It's pugs time!")
-                        else:
-                                await ctx.send("Not enough people responded." +
-                                               " Please get " +
-                                               str(12-num_puggers) + " more.")
-                except:
-                        await ctx.send("A scheduling error occured. "
-                                       "Was the original message deleted?")
+                if num_puggers > 12:
+                        try:
+                                await ctx.send(
+                                       " the time for pugs is upon us!")
+                        except:
+                                await ctx.send("It's pugs time!")
+                else:
+                        await ctx.send("Not enough people responded." +
+                                       " Please get " +
+                                       str(12-num_puggers) + " more.")
+        except:
+                await ctx.send("A scheduling error occured. "
+                               "Was the original message deleted?")
 
         
 ##@client.event
