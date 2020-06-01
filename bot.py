@@ -5,6 +5,7 @@ from bot_data_functions import *
 from bot_commands import *
 from discord import ChannelType
 import asyncio
+import datetime
 
 client = commands.Bot(command_prefix = ".")
 
@@ -18,21 +19,60 @@ async def on_ready():
 
 
 @client.command(aliases=["pugs"])
+#@commands.has_role('Scheduler')
 async def schedule(ctx, time, metric):
         if ctx.message.author.id == 176510548702134273:
+                now = datetime.datetime.now()
+                sleep_timer = 0
+                
+                if metric.lower() == "s":
+                        sleep_timer = int(time)
+                elif metric.lower() == "m":
+                        sleep_timer = int(time) * 60
+                elif metric.lower() == "h":
+                        sleep_timer = int(time) * 60 * 60
+                
                 for i in ctx.message.guild.roles:
                         if str(i) == "Puggers":
                                 role = i
-                if metric.lower() == "s":
-                        await asyncio.sleep(int(time))
-                elif metric.lower() == "m":
-                        await asyncio.sleep(int(time) * 60)
-                elif metric.lower() == "h":
-                        await asyncio.sleep(int(time) * 60 * 60)
+                pugs_time = (now +
+                             datetime.timedelta(seconds =
+                                                sleep_timer)).strftime("%H:%M")
                 try:
-                        await ctx.send(role.mention + " the time for pugs is upon us!")
+                        poll = await ctx.send(
+                                              ", react if you're down " +
+                                              "for pugs at " + pugs_time +
+                                              " PST.")
                 except:
-                        await ctx.send("It's pugs time!")
+                        poll = await ctx.send("React if you're down for pugs" +
+                                              " at " + pugs_time + " PST.")
+                   
+                check = '✅'
+                await poll.add_reaction(check)
+                  
+                await asyncio.sleep(sleep_timer)
+
+                try:
+                        cache_poll = await ctx.fetch_message(poll.id)
+                        
+                        num_puggers = 0
+                        for reaction in cache_poll.reactions:
+                                if str(reaction) == check:
+                                        num_puggers = reaction.count - 1
+
+                        if num_puggers > 12:
+                                try:
+                                        await ctx.send(
+                                               " the time for pugs is upon us!")
+                                except:
+                                        await ctx.send("It's pugs time!")
+                        else:
+                                await ctx.send("Not enough people responded." +
+                                               " Please get " +
+                                               str(12-num_puggers) + " more.")
+                except:
+                        await ctx.send("A scheduling error occured. "
+                                       "Was the original message deleted?")
 
         
 ##@client.event
@@ -138,13 +178,6 @@ async def captains(ctx):
 
 
 @client.command()
-async def ping(ctx):
-        ''' Returns the bot's ping.
-        '''
-        await ctx.send("MatchMaker Bot's Ping: {0}".format(round(client.latency, 2)))
-
-
-@client.command()
 async def team(ctx):
         ''' Reminds the sender what team they're on.
         '''
@@ -203,7 +236,8 @@ async def dicksize(ctx):
                 message = "dick beyond human comprehension."
         else:
                 message = str(i/100) + " inch dick."
-        #        await ctx.send(ctx.message.author.mention + " has a massive dick.")
+##                await ctx.send(ctx.message.author.mention +
+##                               " has a massive dick.")
         #else:
         await ctx.send(ctx.message.author.mention + " has a "
                        + message)
@@ -278,8 +312,8 @@ async def commands(ctx):
         
 @client.command(aliases=["matchmake"])
 async def mm(ctx):
-        ''' Makes a match based on users queued. If not enough players are queued
-                prints an error message.
+        ''' Makes a match based on users queued. If not enough players
+                are queued prints an error message.
         '''
         mylist = getAllPlayerData()
         matchList = matchmake(mylist)
@@ -322,8 +356,9 @@ async def update(ctx):
 
 @client.command(aliases=["q"])
 async def queue(ctx, role="none"):
-        ''' If no args passed, prints the queue. Else it updates the sender's data
-                to place them in the queue for what role they want.
+        ''' If no args passed, prints the queue. Else it updates the
+                sender's data to place them in the queue for what role
+                they want.
         '''
         if role == "none":
                 await ctx.send(ctx.message.author.mention + "\n" + printQueue())
@@ -426,4 +461,4 @@ async def flip(ctx):
                 await ctx.send("Tails!")
 
 
-client.run("NzA3NzI0OTUzMzUyNTM2MTU2.XrT55g.DySDSVO6KYlx_SJ1RjCHdsmaPUo")
+client.run("NzA3NzI0OTUzMzUyNTM2MTU2.XtMTXQ.ibFU_ubrKjpxi4LTKMnLnDeka2w")
