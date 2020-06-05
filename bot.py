@@ -8,6 +8,8 @@ import asyncio
 import datetime
 
 client = commands.Bot(command_prefix = ".")
+global game_in_progress
+game_in_progress = False
 
 
 @client.event
@@ -18,9 +20,41 @@ async def on_ready():
         print("bot is ready")
 
 
+@client.command(aliases=["btag", "tag"])
+async def battletag(ctx, btag):
+        if setBtag(btag, str(ctx.message.author), ctx.message.author.id):
+                await ctx.send(ctx.message.author.mention +
+                               ", your battletag has been saved. " +
+                               "Use .update to pull data from Overwatch " +
+                               "after ensuring your profile is public.")
+        else:
+                await ctx.send(ctx.message.author.mention +
+                               ", something went wrong.")
+
+
+@client.command()
+async def update(ctx):
+        ''' Updates the player data based off their in game profile.
+        '''
+        await ctx.send("This may take a while and will pause all " +
+                       "other commands. Please be patient and do not spam it.")
+        
+        if pullSR(str(ctx.message.author), ctx.message.author.id):
+                await ctx.send(ctx.message.author.mention +
+                               ", success! Your data has been imported." +
+                               " If you are not placed or not public, data" +
+                               " will not be overwritten.")
+        else:
+                await ctx.send(ctx.message.author.mention +
+                               ", something went wrong. Is your profile " +
+                               "public and have you completed any placements?")
+        
+
 @client.command(aliases=["pugs"])
 @commands.has_role('Scheduler')
 async def schedule(ctx, time, metric):
+        ''' Schedules a pug event some time in the future.
+        '''
         now = datetime.datetime.now()
         sleep_timer = 0
         
@@ -34,17 +68,13 @@ async def schedule(ctx, time, metric):
         for i in ctx.message.guild.roles:
                 if str(i) == "Puggers":
                         role = i
-        pugs_time = (now +
-                     datetime.timedelta(seconds =
-                                        sleep_timer)).strftime("%H:%M")
         try:
-                poll = await ctx.send(
+                poll = await ctx.send(role.mention +
                                       ", react if you're down " +
-                                      "for pugs at " + pugs_time +
-                                      " PST.")
+                                      "for pugs in " + time + metric)
         except:
-                poll = await ctx.send("React if you're down for pugs" +
-                                      " at " + pugs_time + " PST.")
+                poll = await ctx.send("React if you're down for pugs in "
+                                      + time + metric)
            
         check = '✅'
         await poll.add_reaction(check)
@@ -61,7 +91,7 @@ async def schedule(ctx, time, metric):
 
                 if num_puggers > 12:
                         try:
-                                await ctx.send(
+                                await ctx.send(role.mention +
                                        " the time for pugs is upon us!")
                         except:
                                 await ctx.send("It's pugs time!")
@@ -84,18 +114,19 @@ async def schedule(ctx, time, metric):
 
 @client.command()
 async def shock(ctx):
+        ''' Shock
+        '''
         await ctx.send("Shock did it without sinatraa fuck all " +
-                       "yall that doubted and said super is a benched player."
-                       + " Thank you for reading my PSA have a good night see "
-                       + "you guys for pugs")
+                       "yall that doubted and said super is a " +
+                       "benched player. Thank you for reading my " +
+                       "PSA have a good night see you guys for pugs")
 
 
 
 @client.command(aliases=["mtt"])
 #@commands.has_role('BotMaster')
 async def move_to_teams(ctx):
-        ''' Moves people on teams to the specific team channel from the draft
-                channel.
+        ''' Moves people on teams to their respective team channel.
         '''
         if ctx.message.author.id == 176510548702134273:
                 try:
@@ -158,6 +189,8 @@ async def move_to_draft(ctx):
 
 @client.command()
 async def captains(ctx):
+        ''' Picks two users at random from draft channel.
+        '''
         ## ## MatchMaking Bot Testing channel IDs
         if ctx.message.guild.id == 651200164169777154:
                 draft_channel = client.get_channel(709248862828888074)
@@ -207,10 +240,219 @@ async def mention(ctx):
         await ctx.send(ctx.message.author.mention)
 
 
+@client.command()
+async def commands(ctx):
+        ''' Prints working commands.
+        '''
+        string1 = """To input your SR, please use the following commands:
+        \n.tank SR\n.dps SR\n.support SR
+        \nTo see your SR, use .sr
+        \nTo queue for a role, use .q role\nTo see the current queue, use .q
+        \nTo see what you are queued for, use .status
+        \nTo see the roles needed to make a match, use .roles
+        \nTo begin matchmaking, use .mm
+        \nTo report the winning team, use.win 1/2
+        \nIn case of a tie, use .win 0"""
+        """
+        \nTo move users to team channels after matchmaking, use .mtt
+        \nTo move users from team channels back to draft, use .mtd
+        """
+        await ctx.send(string1)
+
+        
+@client.command(aliases=["matchmake"])
+async def mm(ctx):
+        ''' Makes a match based on users queued. If not enough players
+                are queued prints an error message.
+        '''
+        global game_in_progress
+        mylist = getAllPlayerData()
+        matchList = matchmake(mylist)
+        if matchList[0] != -1:
+                await ctx.send(printTeams(matchList))
+                await client.change_presence(activity=discord.Game(name="a match"))
+                savePlayerData(matchList[0])
+                await ctx.send(randomMap())
+                game_in_progress = True
+        else:
+                await ctx.send("Error encountered. Are enough players queued?")
+        
+        
+
+@client.command(aliases=["w"])
+async def win(ctx, team_num):
+        ''' Calls adjust to add or subtract player SR.
+        '''
+        global game_in_progress
+        if (team_num == "0" or team_num == "1" or team_num == "2") \
+           and game_in_progress:
+                adjust(int(team_num))
+                if team_num != "0":
+                        await ctx.send("Congrats Team " +
+                                       team_num)
+                else:
+                        await ctx.send("My algorithm is so good, " +
+                                       "the teams were perfectly balanced.")
+                clearQueue()
+                await client.change_presence(activity=discord.Game(name=""))
+                game_in_progress = False
+        else:
+                if(game_in_progress):
+                        await ctx.send("Please enter a valid team.")
+                else:
+                      await ctx.send("No game in progress.")
+
+
+@client.command(aliases=["supp"])
+async def support(ctx, SR):
+        ''' Updates the sender's profile with the new support data.
+        '''
+        sender = str(ctx.message.author)
+        discord_id = ctx.message.author.id
+        if not SR.isalpha() and setSupport(SR, sender, discord_id):
+                await ctx.send(ctx.message.author.mention +
+                               ", your support SR has been updated.")
+        else:
+                await ctx.send(ctx.message.author.mention +
+                               ", please enter a valid integer.")
+
+@client.command(aliases=["dps"])
+async def damage(ctx, SR):
+        ''' Updates the sender's profile with the new dps data.
+        '''
+        sender = str(ctx.message.author)
+        discord_id = ctx.message.author.id
+        if not SR.isalpha() and setDamage(SR, sender, discord_id):
+                await ctx.send(ctx.message.author.mention +
+                               ", your dps SR has been updated.")
+        else:
+                await ctx.send(ctx.message.author.mention +
+                               ", please enter a valid integer.")
+
+@client.command()
+async def tank(ctx, SR):
+        ''' Updates the sender's profile with the new tank data.
+        '''
+        sender = str(ctx.message.author)
+        discord_id = ctx.message.author.id
+        if not SR.isalpha() and setTank(SR, sender, discord_id):
+                await ctx.send(ctx.message.author.mention +
+                               ", your tank SR has been updated.")
+        else:
+                await ctx.send(ctx.message.author.mention +
+                               ", please enter a valid integer.")
+
+
+@client.command(aliases=["q"])
+async def queue(ctx, role="none"):
+        ''' If no args passed, prints the queue. Else it updates the
+                sender's data to place them in the queue for what role
+                they want.
+        '''
+        if role == "none":
+                await ctx.send(ctx.message.author.mention + "\n" + printQueue())
+        else:
+                sender = str(ctx.message.author)
+                message = (queueFor(role, sender)) + "Roles Needed:\n"
+                if tankQueued() != 0:
+                        message = message + (tankQueued() + " tanks.\n")
+                if dpsQueued() != 0:
+                        message = message + (dpsQueued() + " dps.\n")
+                if suppQueued() != 0:
+                        message = message + (suppQueued() + " supports.\n")
+                if message == "Roles Needed:\n":
+                        message = "All roles filled."
+                await ctx.send(message)
+
+
+@client.command(aliases=["role"])
+async def roles(ctx):
+        ''' Prints out the roles needed to matchmake.
+        '''
+        message = "Roles Needed:\n"
+        if tankQueued() != 0:
+                message = message + (tankQueued() + " tanks.\n")
+        if dpsQueued() != 0:
+                message = message + (dpsQueued() + " dps.\n")
+        if suppQueued() != 0:
+                message = message + (suppQueued() + " supports.\n")
+        if message == "Roles Needed:\n":
+                message = "All roles filled."
+        await ctx.send(message)
+        
+        
+@client.command(aliases=["l"])
+async def leave(ctx):
+        ''' Leaves the queue.
+        '''
+        sender = str(ctx.message.author)
+        message = deQueue(sender)
+        message = message + "Roles Needed:\n"
+        if tankQueued() != 0:
+                message = message + (tankQueued() + " tanks.\n")
+        if dpsQueued() != 0:
+                message = message + (dpsQueued() + " dps.\n")
+        if suppQueued() != 0:
+                message = message + (suppQueued() + " supports.\n")
+        if allQueued():
+                message = "All roles filled."
+        await ctx.send(message)
+
+
+@client.command(aliases=["SR"])
+async def sr(ctx):
+        ''' Prints out the player's saved SR values.
+        '''
+        try:
+                sender = str(ctx.message.author)
+                sr = printPlayerData(sender)
+                await ctx.send(sr)
+        except:
+                await ctx.send("Error 404: SR doesn't exist")
+
+
+@client.command()
+async def status(ctx):
+        ''' Prints what the sender is queued for.
+        '''
+        sender = str(ctx.message.author)
+        status = printQueueData(sender)
+        await ctx.send(ctx.message.author.mention + status)
+
+
+##@client.command(aliases=["allsr"])
+##async def allSR(ctx):
+##        ''' Prints out all the saved SR data.
+##        '''
+##        try:
+##                sr = printAllPlayerData()
+##                await ctx.send(sr)
+##        except:
+##                await ctx.send("Error 404: SR doesn't exist")
+       
+
+@client.command()
+async def clear(ctx, amount=5):
+        ''' Removes a specified amount of messages.
+        '''
+        if amount > 0:
+                await ctx.channel.purge(limit=amount+1)
+
+
+@client.command(aliases=["flip"])
+async def coin(ctx):
+        ''' Flips a coin.
+        '''
+        result = random.randint(0,1)
+        if result == 0:
+                await ctx.send("Heads!")
+        else:
+                await ctx.send("Tails!")
+
+
 @client.command(aliases = ["dick", "size"])
 async def dicksize(ctx):
-        ''' Randomly assigns a number in inches, specific users have earned a
-                modifier.
+        ''' Randomly assigns a number in inches.
         '''
         i = random.randint(321, 987)
         if str(ctx.message.author) == "Panda#3239":
@@ -287,177 +529,6 @@ async def gay(ctx):
                 elif (i % 11) == 10:
                         await ctx.send(ctx.message.author.mention +
                                        " is a furry.")
-
-
-@client.command()
-async def commands(ctx):
-        ''' Prints working commands.
-        '''
-        string1 = """To input your SR, please use the following commands:
-        \n.tank SR\n.dps SR\n.support SR
-        \nTo see your SR, use .sr
-        \nTo queue for a role, use .q role\nTo see the current queue, use .q
-        \nTo see what you are queued for, use .status
-        \nTo see the roles needed to make a match, use .roles
-        \nTo begin matchmaking, use .mm
-        \nTo report the winning team, use.win 1/2
-        \nIn case of a tie, use .win 0"""
-        """
-        \nTo move users to team channels after matchmaking, use .mtt
-        \nTo move users from team channels back to draft, use .mtd
-        """
-        await ctx.send(string1)
-
-        
-@client.command(aliases=["matchmake"])
-async def mm(ctx):
-        ''' Makes a match based on users queued. If not enough players
-                are queued prints an error message.
-        '''
-        mylist = getAllPlayerData()
-        matchList = matchmake(mylist)
-        if matchList[0] != -1:
-                await ctx.send(printTeams(matchList))
-                await client.change_presence(activity=discord.Game(name="a match"))
-                savePlayerData(matchList[0])
-                await ctx.send(randomMap())
-        else:
-                await ctx.send("Error encountered. Are enough players queued?")
-        
-        
-
-@client.command(aliases=["w"])
-async def win(ctx):
-        ''' Calls adjust to add or subtract player SR.
-        '''
-        adjust(int(ctx.message.content[-1:]))
-        if ctx.message.content[-1:] != "0":
-                await ctx.send("Congrats Team " + ctx.message.content[-1:])
-        else:
-                await ctx.send("My algorithm is so good, t"
-                               "he teams were perfectly balanced.")
-        clearQueue()
-        await client.change_presence(activity=discord.Game(name=""))
-
-
-@client.command(aliases=["support", "supp", "tank", "damage", "dps"])
-async def update(ctx):
-        ''' Updates the dictionary of player data with the new data.
-        '''
-        mystr = ctx.message.content
-        sender = str(ctx.message.author)
-        discord_id = ctx.message.author.id
-        if updatePlayerData(mystr, sender, discord_id):
-                await ctx.send("Added!")
-        else:
-                await ctx.send("Please enter a valid integer.")
-
-
-@client.command(aliases=["q"])
-async def queue(ctx, role="none"):
-        ''' If no args passed, prints the queue. Else it updates the
-                sender's data to place them in the queue for what role
-                they want.
-        '''
-        if role == "none":
-                await ctx.send(ctx.message.author.mention + "\n" + printQueue())
-        else:
-                sender = str(ctx.message.author)
-                message = (queueFor(role, sender)) + "Roles Needed:\n"
-                if tankQueued() != 0:
-                        message = message + (tankQueued() + " tanks.\n")
-                if dpsQueued() != 0:
-                        message = message + (dpsQueued() + " dps.\n")
-                if suppQueued() != 0:
-                        message = message + (suppQueued() + " supports.\n")
-                if message == "Roles Needed:\n":
-                        message = "All roles filled."
-                await ctx.send(message)
-
-
-@client.command(aliases=["role"])
-async def roles(ctx):
-        ''' Prints out the roles needed to matchmake.
-        '''
-        message = "Roles Needed:\n"
-        if tankQueued() != 0:
-                message = message + (tankQueued() + " tanks.\n")
-        if dpsQueued() != 0:
-                message = message + (dpsQueued() + " dps.\n")
-        if suppQueued() != 0:
-                message = message + (suppQueued() + " supports.\n")
-        if message == "Roles Needed:\n":
-                message = "All roles filled."
-        await ctx.send(message)
-        
-        
-@client.command(aliases=["l"])
-async def leave(ctx):
-        ''' Leaves the queue.
-        '''
-        sender = str(ctx.message.author)
-        message = deQueue(sender)
-        message = message + "Roles Needed:\n"
-        if tankQueued() != 0:
-                message = message + (tankQueued() + " tanks.\n")
-        if dpsQueued() != 0:
-                message = message + (dpsQueued() + " dps.\n")
-        if suppQueued() != 0:
-                message = message + (suppQueued() + " supports.\n")
-        if allQueued():
-                message = "All roles filled."
-        await ctx.send(message)
-
-
-@client.command(aliases=["SR"])
-async def sr(ctx):
-        ''' Prints out the player's saved SR values.
-        '''
-        try:
-                sender = str(ctx.message.author)
-                sr = printPlayerData(sender)
-                await ctx.send(sr)
-        except:
-                await ctx.send("Error 404: SR doesn't exist")
-
-
-@client.command()
-async def status(ctx):
-        ''' Prints what the user is queued for.
-        '''
-        sender = str(ctx.message.author)
-        sr = printQueueData(sender)
-        await ctx.send(ctx.message.author.mention + sr)
-
-
-@client.command(aliases=["allsr"])
-async def allSR(ctx):
-        ''' Prints out all the saved SR data.
-        '''
-        try:
-                sr = printAllPlayerData()
-                await ctx.send(sr)
-        except:
-                await ctx.send("Error 404: SR doesn't exist")
-       
-
-@client.command()
-async def clear(ctx, amount=5):
-        ''' Removes a specified amount of messages.
-        '''
-        if amount > 0:
-                await ctx.channel.purge(limit=amount+1)
-
-
-@client.command(aliases=["coin"])
-async def flip(ctx):
-        ''' Flips a coin.
-        '''
-        result = random.randint(0,1)
-        if result == 0:
-                await ctx.send("Heads!")
-        else:
-                await ctx.send("Tails!")
 
 
 client.run("NzA3NzI0OTUzMzUyNTM2MTU2.XtS5MQ.N35CrNJ56axgzpasp640Pi3oS6w")
