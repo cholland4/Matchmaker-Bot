@@ -1,6 +1,8 @@
 import numpy as np
 import json
 import random
+import requests
+from bs4 import BeautifulSoup
 
 
 def savePlayerData(playerData):
@@ -148,32 +150,109 @@ def deQueue(PlayerID):
     return "Left the queue.\n"
 
 
-#good work gang
-def updatePlayerData(mystr, PlayerID, discord_id):
-    ''' Updates the hashmap of PlayerID's data.
-    '''
-    userData = mystr.split()
-    role = userData[0][1:]
-    if userData[1].isalpha():
+def webScrape(battletag):
+    link = "https://playoverwatch.com/en-us/career/pc/"
+    page = requests.get(link + battletag.replace("#", "-"))
+
+    soup = BeautifulSoup(page.text, "html.parser")
+    
+    ranks = soup.find_all(class_='competitive-rank-role')
+    tank = dps = supp = -1
+
+    for i in range(len(ranks)):
+        rank_role = ranks[i].find(class_= 'competitive-rank-role-icon')
+        role_sr = ranks[i].find(class_='competitive-rank-level').text
+        if "tank" in str(rank_role):
+            tank = int(role_sr)
+        elif "offense" in str(rank_role):
+            dps = int(role_sr)
+        elif "support" in str(rank_role):
+            supp = int(role_sr)
+    return [tank, dps, supp]
+
+
+def setBtag(btag, PlayerID, discord_id):
+    """ Updates the player's battletag.
+    """
+    try:
+        playerData[PlayerID]["btag"] = btag
+        savePlayerData(playerData)
+        return True
+    except:
         return False
-    sr = int(userData[1])
+
+
+def pullSR(PlayerID, discord_id):
+    """ Updates the player's SR from their online profile.
+    """
+    try:
+        battletag = playerData[PlayerID]["btag"]
+        sr_list = webScrape(battletag)
+        if sr_list == [-1, -1, -1]:
+            return False
+        if sr_list[0] != -1:
+            setTank(sr_list[0], PlayerID, discord_id)
+        if sr_list[1] != -1:
+            setDamage(sr_list[1], PlayerID, discord_id)
+        if sr_list[2] != -1:
+            setSupport(sr_list[2], PlayerID, discord_id)
+        return True
+    except:
+        return False
+
+
+def setSupport(sr, PlayerID, discord_id):
+    """ Updates the player's support SR.
+    """
+    sr = int(sr)
     if sr < 0 or sr > 5000:
         return False
-    if PlayerID not in playerData:
-        playerData[PlayerID] = {}
-    if(role == "support" or role == "supp"):
+    try:
         playerData[PlayerID]["support"] = sr
-    elif(role == "damage" or role == "dps"):
+        playerData[PlayerID]["queue"] = "none"
+        playerData[PlayerID]["team"] = -1
+        if "id" not in playerData[PlayerID].keys():
+            playerData[PlayerID]["id"] = discord_id
+        savePlayerData(playerData)
+        return True
+    except:
+        return False
+
+
+def setDamage(sr, PlayerID, discord_id):
+    """ Updates the player's support SR.
+    """
+    sr = int(sr)
+    if sr < 0 or sr > 5000:
+        return False
+    try:
         playerData[PlayerID]["dps"] = sr
-    elif(role == "tank"):
+        playerData[PlayerID]["queue"] = "none"
+        playerData[PlayerID]["team"] = -1
+        if "id" not in playerData[PlayerID].keys():
+            playerData[PlayerID]["id"] = discord_id
+        savePlayerData(playerData)
+        return True
+    except:
+        return False
+
+
+def setTank(sr, PlayerID, discord_id):
+    """ Updates the player's support SR.
+    """
+    sr = int(sr)
+    if sr < 0 or sr > 5000:
+        return False
+    try:
         playerData[PlayerID]["tank"] = sr
-    playerData[PlayerID]["queue"] = "none"
-    playerData[PlayerID]["team"] = -1
-    if "id" not in playerData[PlayerID].keys():
-        playerData[PlayerID]["id"] = discord_id
-    # print(playerData)
-    savePlayerData(playerData)
-    return True
+        playerData[PlayerID]["queue"] = "none"
+        playerData[PlayerID]["team"] = -1
+        if "id" not in playerData[PlayerID].keys():
+            playerData[PlayerID]["id"] = discord_id
+        savePlayerData(playerData)
+        return True
+    except:
+        return False
 
 
 def clearPlayerData():
