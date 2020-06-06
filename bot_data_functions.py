@@ -204,6 +204,8 @@ def pullSR(PlayerID, discord_id):
 def setSupport(sr, PlayerID, discord_id):
     """ Updates the player's support SR.
     """
+    if PlayerID not in playerData:
+        playerData[PlayerID] = {}
     sr = int(sr)
     if sr < 0 or sr > 5000:
         return False
@@ -222,6 +224,8 @@ def setSupport(sr, PlayerID, discord_id):
 def setDamage(sr, PlayerID, discord_id):
     """ Updates the player's support SR.
     """
+    if PlayerID not in playerData:
+        playerData[PlayerID] = {}
     sr = int(sr)
     if sr < 0 or sr > 5000:
         return False
@@ -240,6 +244,8 @@ def setDamage(sr, PlayerID, discord_id):
 def setTank(sr, PlayerID, discord_id):
     """ Updates the player's support SR.
     """
+    if PlayerID not in playerData:
+        playerData[PlayerID] = {}
     sr = int(sr)
     if sr < 0 or sr > 5000:
         return False

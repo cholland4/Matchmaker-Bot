@@ -5,6 +5,7 @@ from bot_data_functions import *
 from bot_matchmake_functions import *
 from discord import ChannelType
 import asyncio
+from discord.utils import get
 import datetime
 
 client = commands.Bot(command_prefix = ".")
@@ -48,8 +49,8 @@ async def update(ctx):
                 await ctx.send(ctx.message.author.mention +
                                ", something went wrong. Is your profile " +
                                "public and have you completed any placements?")
-        
 
+        
 @client.command(aliases=["pugs"])
 @commands.has_role('Scheduler')
 async def schedule(ctx, time, metric):
@@ -77,7 +78,8 @@ async def schedule(ctx, time, metric):
                                       + time + metric)
            
         check = '✅'
-        await poll.add_reaction(check)
+        rart = 'Rart:658615209463775242'
+        await poll.add_reaction(rart)
           
         await asyncio.sleep(sleep_timer)
 
@@ -86,7 +88,7 @@ async def schedule(ctx, time, metric):
                 
                 num_puggers = 0
                 for reaction in cache_poll.reactions:
-                        if str(reaction) == check:
+                        if str(reaction) == rart:
                                 num_puggers = reaction.count - 1
 
                 if num_puggers > 12:
@@ -199,7 +201,6 @@ async def captains(ctx):
         if ctx.message.guild.id == 442813167148728330:
                 draft_channel = client.get_channel(652717496045928458)
 
-        print(draft_channel.members)
         i = random.randint(0, len(draft_channel.members))
         j = random.randint(0, len(draft_channel.members))
         while i == j:
@@ -309,7 +310,7 @@ async def support(ctx, SR):
         '''
         sender = str(ctx.message.author)
         discord_id = ctx.message.author.id
-        if not SR.isalpha() and setSupport(SR, sender, discord_id):
+        if setSupport(SR, sender, discord_id):
                 await ctx.send(ctx.message.author.mention +
                                ", your support SR has been updated.")
         else:
@@ -322,7 +323,7 @@ async def damage(ctx, SR):
         '''
         sender = str(ctx.message.author)
         discord_id = ctx.message.author.id
-        if not SR.isalpha() and setDamage(SR, sender, discord_id):
+        if setDamage(SR, sender, discord_id):
                 await ctx.send(ctx.message.author.mention +
                                ", your dps SR has been updated.")
         else:
@@ -335,7 +336,7 @@ async def tank(ctx, SR):
         '''
         sender = str(ctx.message.author)
         discord_id = ctx.message.author.id
-        if not SR.isalpha() and setTank(SR, sender, discord_id):
+        if (not SR.isalpha()) and setTank(SR, sender, discord_id):
                 await ctx.send(ctx.message.author.mention +
                                ", your tank SR has been updated.")
         else:
