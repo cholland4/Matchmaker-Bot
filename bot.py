@@ -350,20 +350,31 @@ async def queue(ctx, role="none"):
                 sender's data to place them in the queue for what role
                 they want.
         '''
-        if role == "none":
-                await ctx.send(ctx.message.author.mention + "\n" + printQueue())
+        if game_in_progress:
+                await ctx.send("Please report a winner before queuing!")
         else:
-                sender = str(ctx.message.author)
-                message = (queueFor(role, sender)) + "Roles Needed:\n"
-                if tankQueued() != 0:
-                        message = message + (tankQueued() + " tanks.\n")
-                if dpsQueued() != 0:
-                        message = message + (dpsQueued() + " dps.\n")
-                if suppQueued() != 0:
-                        message = message + (suppQueued() + " supports.\n")
-                if message == "Roles Needed:\n":
-                        message = "All roles filled."
-                await ctx.send(message)
+                if role == "none":
+                        await ctx.send(ctx.message.author.mention
+                                       + "\n" + printQueue())
+                elif role == "clear":
+                        clearQueue()
+                        await ctx.send("The queue has been emptied.")
+                else:
+                        sender = str(ctx.message.author)
+                        message = (queueFor(role, sender)) + \
+                                  "Roles Needed:\n"
+                        if tankQueued() != 0:
+                                message = message + (tankQueued() +
+                                                     " tanks.\n")
+                        if dpsQueued() != 0:
+                                message = message + (dpsQueued() +
+                                                     " dps.\n")
+                        if suppQueued() != 0:
+                                message = message + (suppQueued() +
+                                                     " supports.\n")
+                        if message == "Roles Needed:\n":
+                                message = "All roles filled."
+                        await ctx.send(message)
 
 
 @client.command(aliases=["role"])
