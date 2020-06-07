@@ -359,6 +359,34 @@ async def queue(ctx, role="none"):
                 elif role == "clear":
                         clearQueue()
                         await ctx.send("The queue has been emptied.")
+                elif role == "fill":
+                        roles_needed = []
+                        if suppQueued() != 0:
+                                roles_needed.append("support")
+                        if tankQueued() != 0:
+                                roles_needed.append("tank")
+                        if dpsQueued() != 0:
+                                roles_needed.append("dps")
+                        if len(roles_needed) == 0:
+                                roles_needed = ["tank", "support", "dps"]
+                        
+                        rand = random.randint(0, len(roles_needed)-1)
+                        sender = str(ctx.message.author)
+                        message = (queueFor(roles_needed[rand], sender)) + \
+                                  "Roles Needed:\n"
+                        if tankQueued() != 0:
+                                message = message + (tankQueued() +
+                                                     " tanks.\n")
+                        if dpsQueued() != 0:
+                                message = message + (dpsQueued() +
+                                                     " dps.\n")
+                        if suppQueued() != 0:
+                                message = message + (suppQueued() +
+                                                     " supports.\n")
+                        if message == "Roles Needed:":
+                                message = "All roles filled."
+                        await ctx.send(message)
+                        
                 else:
                         sender = str(ctx.message.author)
                         message = (queueFor(role, sender)) + \
@@ -372,9 +400,10 @@ async def queue(ctx, role="none"):
                         if suppQueued() != 0:
                                 message = message + (suppQueued() +
                                                      " supports.\n")
-                        if message == "Roles Needed:\n":
+                        if message == "Roles Needed:":
                                 message = "All roles filled."
-                        await ctx.send(message)
+                        await ctx.send(ctx.message.author.mention + ", " +
+                                       message)
 
 
 @client.command(aliases=["role"])

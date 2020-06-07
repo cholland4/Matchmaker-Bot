@@ -26,7 +26,7 @@ numQueued = {"tank":0, "dps":0, "support":0}
 for player in playerData:
     playerData[player]["queue"] = "none"
     playerData[player]["team"] = -1
-
+savePlayerData(playerData)
 
 def clearQueue():
     ''' Clears the number of players queued and empties the queue.
@@ -48,9 +48,11 @@ def queueFor(role, PlayerID):
         Sets the player's queued role to whatever they specified.
         Updates number of players queued for each role.
     '''
+    if PlayerID not in playerData.keys():
+        return("You don't have any stored data.\n")
     global numQueued
-    deQueue(PlayerID)
     if role in playerData[PlayerID]:
+        deQueue(PlayerID)
         playerData[PlayerID]["queue"] = role
         savePlayerData(playerData)
         if role == "tank":
@@ -147,6 +149,7 @@ def deQueue(PlayerID):
         numQueued["support"] -= 1
     elif role == "none":
         return "Not in queue.\n"
+    savePlayerData(playerData)
     return "Left the queue.\n"
 
 
