@@ -290,7 +290,7 @@ async def mm(ctx):
         ''' Makes a match based on users queued. If not enough players
                 are queued prints an error message.
         '''
-        await ctx.message.delete()
+        #await ctx.message.delete()
         global game_in_progress
         mylist = getAllPlayerData()
         matchList = matchmake(mylist)
@@ -302,7 +302,6 @@ async def mm(ctx):
                 game_in_progress = True
         else:
                 await ctx.send("Error encountered. Are enough players queued?")
-        
         
 
 @client.command(aliases=["w"])

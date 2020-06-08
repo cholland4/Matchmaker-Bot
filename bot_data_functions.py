@@ -340,56 +340,50 @@ def getAllPlayerData():
     pData = loadPlayerData()
     return pData
 
+key_queue = "queue"
 
-def getTeam1(mmData):
-    ''' Gets team 1.
+
+def getTeam(mmData, teamNum):
+    ''' Gets teams.
     '''
-    team1 = {}
+    team = {}
+    tanks = {}
+    dps = {}
+    numSupp = 0
+    numDPS = 0
     for player in mmData.keys():
-        if mmData[player]["team"] == 1:
-            team1[player] = mmData[player]["queue"]
-    return team1
-
-
-def getTeam2(mmData):
-    ''' Gets team 2.
-    '''
-    team2 = {}
-    for player in mmData.keys():
-        if mmData[player]["team"] == 2:
-            team2[player] = mmData[player]["queue"]
-    return team2
+        if mmData[player]["team"] == teamNum:
+            if mmData[player]["queue"] == "tank":
+                tanks[player] = mmData[player]["queue"]
+            elif mmData[player]["queue"] == "dps":
+                dps[player] = mmData[player]["queue"]
+            else:
+                team[player] = mmData[player]["queue"]
+    team.update(dps)
+    team.update(tanks)
+    return team
 
 
 def printTeams(mmList):
     ''' Returns a formatted string containing all players for both teams.
     '''
     mmData = mmList[0]
-    team1 = getTeam1(mmData)
-    team2 = getTeam2(mmData)
-    teamA = "```Team 1: Avg = " + str(mmList[1]) + "\n"
+    team1 = getTeam(mmData, 1)
+    team2 = getTeam(mmData, 2)
+    teamA = "Team 1: Avg = " + str(mmList[1]) + "\n"
     teamB = "Team 2: Avg = " + str(mmList[2]) + "\n"
+    
     for player in team1.keys():
-        teamA = teamA + player
-        if mmData[player]["queue"] == "support":
-            teamA = teamA + (" " * (32-len(player))) + mmData[player]["queue"]
-        elif mmData[player]["queue"] == "dps":
-            teamA = teamA + (" " * (32-len(player)))+ mmData[player]["queue"]
-        else:
-            teamA = teamA + (" " * (32-len(player)))+ mmData[player]["queue"]
-
-        teamA = teamA + "\n"
+        teamA = teamA + player + \
+                (" " * (32-len(player))) + mmData[player]["queue"] + \
+                "\n"
+        
     for player in team2.keys():
-        teamB = teamB + player
-        if mmData[player]["queue"] == "support":
-            teamB = teamB + (" " * (32-len(player))) + mmData[player]["queue"]
-        elif mmData[player]["queue"] == "dps":
-            teamB = teamB + (" " * (32-len(player))) + mmData[player]["queue"]
-        else:
-            teamB = teamB + (" " * (32-len(player)))+ mmData[player]["queue"]
-
-        teamB = teamB + "\n"
-    message = "\n" + (teamA) + "\n" + (teamB) + "```"
+        teamB = teamB + player + \
+                (" " * (32-len(player))) + mmData[player]["queue"] + \
+                "\n"
+        
+    message = "```\n" + (teamA) + "\n" + (teamB) + "```"
     return message
 
 
