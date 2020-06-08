@@ -1,14 +1,15 @@
 {
     "Archangel#0346": {
-        "support": 2550,
+        "support": 2650,
         "queue": "none",
         "team": -1,
-        "tank": 2500,
+        "tank": 2010,
         "dps": 2250,
-        "id": 176510548702134273
+        "id": 176510548702134273,
+        "btag": "Archangel#12958"
     },
     "TheGlare#1451": {
-        "tank": 3650,
+        "tank": 3700,
         "queue": "none",
         "team": -1,
         "id": 176550035994050560,
@@ -16,23 +17,24 @@
         "dps": 2800
     },
     "airyqe#5154": {
-        "dps": 3800,
+        "dps": 3900,
         "queue": "none",
         "team": -1,
         "id": 219510602379296769,
-        "tank": 3850,
+        "tank": 3800,
         "support": 3750
     },
     "Duncanator02#5596": {
-        "support": 2550,
+        "support": 2600,
         "queue": "none",
         "team": -1,
         "id": 364167513971621890,
-        "tank": 2300,
-        "dps": 2100
+        "tank": 2010,
+        "dps": 1814,
+        "btag": "Duncanator02#1164"
     },
     "MusicalDuck#0138": {
-        "tank": 2500,
+        "tank": 2450,
         "queue": "none",
         "team": -1,
         "id": 388171533589282816,
@@ -40,42 +42,46 @@
         "support": 3200
     },
     "Timmy#3426": {
-        "dps": 4350,
+        "dps": 4100,
         "queue": "none",
         "team": -1,
         "id": 345366715279867906,
-        "tank": 3550,
-        "support": 3800
+        "tank": 3573,
+        "support": 3800,
+        "btag": "sinatraa#11192"
     },
     "Panda#3239": {
-        "support": 3950,
+        "support": 4097,
         "queue": "none",
         "team": -1,
         "id": 238471482009714688,
-        "tank": 3767,
-        "dps": 3050
+        "tank": 3600,
+        "dps": 3191,
+        "btag": "Panda#16480"
     },
     "Scrub#1337": {
-        "tank": 3950,
+        "tank": 3999,
         "queue": "none",
         "team": -1,
         "id": 208397981437788170,
-        "dps": 3350,
-        "support": 3950
+        "dps": 3400,
+        "support": 3999
     },
     "Aries#0666": {
-        "support": 2200,
+        "support": 5000,
         "queue": "none",
         "team": -1,
         "id": 256972883404783616,
-        "tank": 4600
+        "tank": 4900,
+        "btag": "SamNimba#1355",
+        "dps": 5000
     },
     "MeatofMeat#9866": {
         "tank": 2670,
         "queue": "none",
         "team": -1,
         "id": 208449704021852170,
-        "dps": 2300
+        "dps": 2250
     },
     "StodgyMeteor#8420": {
         "dps": 2975,
@@ -86,12 +92,13 @@
         "support": 3007
     },
     "Twang#8757": {
-        "tank": 4160,
+        "tank": 4023,
         "queue": "none",
         "team": -1,
         "id": 176500074543710210,
-        "dps": 3700,
-        "support": 3600
+        "dps": 3637,
+        "support": 3609,
+        "btag": "Twang#11716"
     },
     "Immortis#6644": {
         "tank": 3100,
@@ -99,7 +106,7 @@
         "team": -1,
         "id": 317076692462206978,
         "dps": 2650,
-        "support": 2600
+        "support": 2550
     },
     "Tyrell#2579": {
         "dps": 3233,
@@ -115,11 +122,11 @@
         "id": 218496623720923138
     },
     "sb13sb(Sam Bolen)#5999": {
-        "tank": 1954,
+        "tank": 1904,
         "queue": "none",
         "team": -1,
         "id": 185875006973149185,
-        "dps": 2336
+        "dps": 2386
     },
     "Hwilldabeast#9444": {
         "support": 3750,
@@ -139,13 +146,15 @@
         "support": 3050,
         "queue": "none",
         "team": -1,
-        "id": 200113849695862784
+        "id": 200113849695862784,
+        "tank": 2550
     },
     "riptide#2016": {
-        "support": 3608,
+        "support": 3650,
         "queue": "none",
         "team": -1,
-        "id": 364172987026374667
+        "id": 364172987026374667,
+        "tank": 2300
     },
     "BubbLeS#4835": {
         "tank": 3500,
@@ -154,5 +163,32 @@
         "id": 121008570224345088,
         "dps": 3350,
         "support": 3500
+    },
+    "Eboy Jared#7365": {
+        "tank": 4100,
+        "queue": "none",
+        "team": -1,
+        "id": 402248529042735115,
+        "support": 4200
+    },
+    "Daddy#5174": {
+        "tank": 2650,
+        "queue": "none",
+        "team": -1,
+        "id": 212424403353468928,
+        "dps": 2350,
+        "support": 2500
+    },
+    "buns#0505": {
+        "dps": 3100,
+        "queue": "none",
+        "team": -1,
+        "id": 353326190049624064
+    },
+    "HammerRabi#5464": {
+        "support": 2250,
+        "queue": "none",
+        "team": -1,
+        "id": 297440916791361536
     }
 }
