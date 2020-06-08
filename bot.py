@@ -12,6 +12,14 @@ client = commands.Bot(command_prefix = ".")
 global game_in_progress
 game_in_progress = False
 
+global msg
+global response
+
+vip_list = ["176510548702134273", "176550035994050560", "364167513971621890",
+            "238471482009714688"]
+
+## Cameron, Michael, Tony, Panda
+
 
 @client.event
 async def on_ready():
@@ -19,6 +27,13 @@ async def on_ready():
         '''
         loadPlayerData()
         print("bot is ready")
+
+
+@client.command()
+async def vip(ctx):
+        global vip_list
+        if str(ctx.message.author.id) == "176510548702134273":
+                vip_list.append(str(ctx.message.mentions[0].id))
 
 
 @client.command(aliases=["btag", "tag"])
@@ -56,6 +71,7 @@ async def update(ctx):
 async def schedule(ctx, time, metric):
         ''' Schedules a pug event some time in the future.
         '''
+        await ctx.message.delete()
         now = datetime.datetime.now()
         sleep_timer = 0
         
@@ -118,6 +134,7 @@ async def schedule(ctx, time, metric):
 async def shock(ctx):
         ''' Shock
         '''
+        await ctx.message.delete()
         await ctx.send("Shock did it without sinatraa fuck all " +
                        "yall that doubted and said super is a " +
                        "benched player. Thank you for reading my " +
@@ -130,43 +147,44 @@ async def shock(ctx):
 async def move_to_teams(ctx):
         ''' Moves people on teams to their respective team channel.
         '''
-        if ctx.message.author.id == 176510548702134273:
-                try:
-                        ## ## MatchMaking Bot Testing channel IDs
-                        if ctx.message.guild.id == 651200164169777154:
-                                draft_channel = client.get_channel(709248862828888074)
-                                channel1 = client.get_channel(707749575108198441)
-                                channel2 = client.get_channel(707749630728732712)
+        await ctx.message.delete()
+        if str(ctx.message.author.id) in vip_list:
+                ## ## MatchMaking Bot Testing channel IDs
+                if ctx.message.guild.id == 651200164169777154:
+                        draft_channel = client.get_channel(709248862828888074)
+                        channel1 = client.get_channel(707749575108198441)
+                        channel2 = client.get_channel(707749630728732712)
 
-                        ## ## We Use this channel IDs
-                        if ctx.message.guild.id == 442813167148728330:
-                                draft_channel = client.get_channel(652717496045928458)
-                                channel1 = client.get_channel(647667378334990377)
-                                channel2 = client.get_channel(647667443782909955)
-                        
-                        pdata = loadPlayerData()
-                        team1 = get_t1_id(pdata)
-                        team2 = get_t2_id(pdata)
-                        sender = ctx.message.author
-                        num_moved = 0
-                        for member in ctx.message.guild.members:
-                                if member.id in team1:
-                                        if member in draft_channel.members:
-                                                await member.move_to(channel1)
-                                                num_moved += 1
-                                elif member.id in team2:
-                                        if member in draft_channel.members:                                                await member.move_to(channel2)
+                ## ## We Use this channel IDs
+                if ctx.message.guild.id == 442813167148728330:
+                        draft_channel = client.get_channel(652717496045928458)
+                        channel1 = client.get_channel(647667378334990377)
+                        channel2 = client.get_channel(647667443782909955)
+                
+                pdata = loadPlayerData()
+                team1 = get_t1_id(pdata)
+                team2 = get_t2_id(pdata)
+                sender = ctx.message.author
+                num_moved = 0
+                for member in ctx.message.guild.members:
+                        if member.id in team1:
+                                if member in draft_channel.members:
+                                        await member.move_to(channel1)
                                         num_moved += 1
-                        #await ctx.send("{} users moved.".format(num_moved))
-                except:
-                        await ctx.send("You do not have permission to use this command.")
+                        elif member.id in team2:
+                                if member in draft_channel.members:                                                await member.move_to(channel2)
+                                num_moved += 1
+                await ctx.send("{} users moved.".format(num_moved),
+                               delete_after=3)
+
 
 @client.command(aliases=["mtd"])
 #@commands.has_role('BotMaster')
 async def move_to_draft(ctx):
         ''' Moves all users from the team channels to the draft channel.
         '''
-        if ctx.message.author.id == 176510548702134273:
+        await ctx.message.delete()
+        if str(ctx.message.author.id) in vip_list:
                 ## ## MatchMaking Bot Testing channel IDs
                 if ctx.message.guild.id == 651200164169777154:
                         draft_channel = client.get_channel(709248862828888074)
@@ -186,7 +204,8 @@ async def move_to_draft(ctx):
                 for member in channel2.members:
                         await member.move_to(draft_channel)
                         num_moved += 1
-                #await ctx.send("{} users moved.".format(num_moved))
+                await ctx.send("{} users moved.".format(num_moved),
+                               delete_after=3)
 
 
 @client.command()
@@ -229,6 +248,7 @@ async def map(ctx):
         ''' Sends a random map.
         '''
         if str(ctx.message.author) == "TheGlare#1451":
+                await ctx.message.delete()
                 await ctx.send("King's Row")
         else:
                 await ctx.send(randomMap())
@@ -238,6 +258,10 @@ async def map(ctx):
 async def mention(ctx):
         ''' Mentions whoever used the command.
         '''
+        await ctx.message.delete()
+        sleep_timer = random.randint(1, 120)
+        print(sleep_timer)
+        await asyncio.sleep(sleep_timer)
         await ctx.send(ctx.message.author.mention)
 
 
@@ -266,6 +290,7 @@ async def mm(ctx):
         ''' Makes a match based on users queued. If not enough players
                 are queued prints an error message.
         '''
+        await ctx.message.delete()
         global game_in_progress
         mylist = getAllPlayerData()
         matchList = matchmake(mylist)
@@ -355,7 +380,8 @@ async def queue(ctx, role="none"):
         else:
                 if role == "none":
                         await ctx.send(ctx.message.author.mention
-                                       + "\n" + printQueue())
+                                       + "\n" + printQueue()),
+                                       #delete_after=15)
                 elif role == "clear":
                         clearQueue()
                         await ctx.send("The queue has been emptied.")
@@ -372,44 +398,24 @@ async def queue(ctx, role="none"):
                         
                         rand = random.randint(0, len(roles_needed)-1)
                         sender = str(ctx.message.author)
-                        message = (queueFor(roles_needed[rand], sender)) + \
-                                  "Roles Needed:\n"
-                        if tankQueued() != 0:
-                                message = message + (tankQueued() +
-                                                     " tanks.\n")
-                        if dpsQueued() != 0:
-                                message = message + (dpsQueued() +
-                                                     " dps.\n")
-                        if suppQueued() != 0:
-                                message = message + (suppQueued() +
-                                                     " supports.\n")
-                        if message == "Roles Needed:":
-                                message = "All roles filled."
-                        await ctx.send(message)
+                        message = (queueFor(roles_needed[rand], sender))
+                        await ctx.send(ctx.message.author.mention + ", " +
+                                       message)
+                        await roles(ctx, 10)
                         
                 else:
                         sender = str(ctx.message.author)
-                        message = (queueFor(role, sender)) + \
-                                  "Roles Needed:\n"
-                        if tankQueued() != 0:
-                                message = message + (tankQueued() +
-                                                     " tanks.\n")
-                        if dpsQueued() != 0:
-                                message = message + (dpsQueued() +
-                                                     " dps.\n")
-                        if suppQueued() != 0:
-                                message = message + (suppQueued() +
-                                                     " supports.\n")
-                        if message == "Roles Needed:":
-                                message = "All roles filled."
+                        message = (queueFor(role, sender))
                         await ctx.send(ctx.message.author.mention + ", " +
                                        message)
+                        await roles(ctx, 10)
 
 
 @client.command(aliases=["role"])
-async def roles(ctx):
+async def roles(ctx, timer=25):
         ''' Prints out the roles needed to matchmake.
         '''
+        await ctx.message.delete()
         message = "Roles Needed:\n"
         if tankQueued() != 0:
                 message = message + (tankQueued() + " tanks.\n")
@@ -419,7 +425,7 @@ async def roles(ctx):
                 message = message + (suppQueued() + " supports.\n")
         if message == "Roles Needed:\n":
                 message = "All roles filled."
-        await ctx.send(message)
+        await ctx.send(message, delete_after=timer)
         
         
 @client.command(aliases=["l"])
@@ -428,16 +434,7 @@ async def leave(ctx):
         '''
         sender = str(ctx.message.author)
         message = deQueue(sender)
-        message = message + "Roles Needed:\n"
-        if tankQueued() != 0:
-                message = message + (tankQueued() + " tanks.\n")
-        if dpsQueued() != 0:
-                message = message + (dpsQueued() + " dps.\n")
-        if suppQueued() != 0:
-                message = message + (suppQueued() + " supports.\n")
-        if allQueued():
-                message = "All roles filled."
-        await ctx.send(message)
+        await roles(ctx, 10)
 
 
 @client.command(aliases=["SR"])
@@ -456,6 +453,7 @@ async def sr(ctx):
 async def status(ctx):
         ''' Prints what the sender is queued for.
         '''
+        await ctx.message.delete()
         sender = str(ctx.message.author)
         status = printQueueData(sender)
         await ctx.send(ctx.message.author.mention + status)
@@ -476,8 +474,9 @@ async def status(ctx):
 async def clear(ctx, amount=5):
         ''' Removes a specified amount of messages.
         '''
+        await ctx.message.delete()
         if amount > 0:
-                await ctx.channel.purge(limit=amount+1)
+                await ctx.channel.purge(limit=amount)
 
 
 @client.command(aliases=["flip"])
@@ -495,6 +494,7 @@ async def coin(ctx):
 async def dicksize(ctx):
         ''' Randomly assigns a number in inches.
         '''
+        await ctx.message.delete()
         i = random.randint(321, 987)
         if str(ctx.message.author) == "Panda#3239":
                 i += 2000
@@ -529,6 +529,7 @@ async def dicksize(ctx):
 async def gay(ctx):
         ''' Randomly assigns the user a sexuality. Not always random.
         '''
+        await ctx.message.delete()
         i = random.randint(0,100)
         if str(ctx.message.author) == "Aries#0666":
                 await ctx.send(ctx.message.author.mention + " is a mercy main.")
