@@ -67,59 +67,60 @@ async def update(ctx):
 
         
 @client.command(aliases=["pugs"])
-@commands.has_role('Scheduler')
 async def schedule(ctx, time, metric):
         ''' Schedules a pug event some time in the future.
         '''
-        await ctx.message.delete()
-        now = datetime.datetime.now()
-        sleep_timer = 0
-        
-        if metric.lower() == "s":
-                sleep_timer = int(time)
-        elif metric.lower() == "m":
-                sleep_timer = int(time) * 60
-        elif metric.lower() == "h":
-                sleep_timer = int(time) * 60 * 60
-        
-        for i in ctx.message.guild.roles:
-                if str(i) == "Puggers":
-                        role = i
-        try:
-                poll = await ctx.send(role.mention +
-                                      ", react if you're down " +
-                                      "for pugs in " + time + metric)
-        except:
-                poll = await ctx.send("React if you're down for pugs in "
-                                      + time + metric)
-           
-        check = '✅'
-        rart = 'Rart:658615209463775242'
-        await poll.add_reaction(rart)
-          
-        await asyncio.sleep(sleep_timer)
-
-        try:
-                cache_poll = await ctx.fetch_message(poll.id)
+        if str(ctx.message.author.id) in vip_list:
+                # await ctx.message.delete()
+                now = datetime.datetime.now()
+                sleep_timer = 0
                 
-                num_puggers = 0
-                for reaction in cache_poll.reactions:
-                        if str(reaction) == rart:
-                                num_puggers = reaction.count - 1
+                if metric.lower() == "s":
+                        sleep_timer = int(time)
+                elif metric.lower() == "m":
+                        sleep_timer = int(time) * 60
+                elif metric.lower() == "h":
+                        sleep_timer = int(time) * 60 * 60
+                
+                for i in ctx.message.guild.roles:
+                        if str(i) == "Puggers":
+                                role = i
+                try:
+                        poll = await ctx.send(role.mention +
+                                              ", react if you're down " +
+                                              "for pugs in " + time + metric)
+                except:
+                        poll = await ctx.send("React if you're down for pugs in "
+                                              + time + metric)
+                   
+                check = '✅'
+                rart = 'Rart:658615209463775242'
+                await poll.add_reaction(rart)
+                  
+                await asyncio.sleep(sleep_timer)
 
-                if num_puggers > 12:
-                        try:
-                                await ctx.send(role.mention +
-                                       " the time for pugs is upon us!")
-                        except:
-                                await ctx.send("It's pugs time!")
-                else:
-                        await ctx.send("Not enough people responded." +
-                                       " Please get " +
-                                       str(12-num_puggers) + " more.")
-        except:
-                await ctx.send("A scheduling error occured. "
-                               "Was the original message deleted?")
+                try:
+                        cache_poll = await ctx.fetch_message(poll.id)
+                        
+                        num_puggers = 0
+                        for reaction in cache_poll.reactions:
+                                print(str(reaction))
+                                if str(reaction) == "<:Rart:658615209463775242>":
+                                        num_puggers = reaction.count - 1
+
+                        if num_puggers > 12:
+                                try:
+                                        await ctx.send(role.mention +
+                                               " the time for pugs is upon us!")
+                                except:
+                                        await ctx.send("It's pugs time!")
+                        else:
+                                await ctx.send("Not enough people responded." +
+                                               " Please get " +
+                                               str(12-num_puggers) + " more.")
+                except:
+                        await ctx.send("A scheduling error occured. "
+                                       "Was the original message deleted?")
 
         
 ##@client.event
@@ -134,7 +135,7 @@ async def schedule(ctx, time, metric):
 async def shock(ctx):
         ''' Shock
         '''
-        await ctx.message.delete()
+        # await ctx.message.delete()
         await ctx.send("Shock did it without sinatraa fuck all " +
                        "yall that doubted and said super is a " +
                        "benched player. Thank you for reading my " +
@@ -147,7 +148,7 @@ async def shock(ctx):
 async def move_to_teams(ctx):
         ''' Moves people on teams to their respective team channel.
         '''
-        await ctx.message.delete()
+        # await ctx.message.delete()
         if str(ctx.message.author.id) in vip_list:
                 ## ## MatchMaking Bot Testing channel IDs
                 if ctx.message.guild.id == 651200164169777154:
@@ -183,7 +184,7 @@ async def move_to_teams(ctx):
 async def move_to_draft(ctx):
         ''' Moves all users from the team channels to the draft channel.
         '''
-        await ctx.message.delete()
+        # await ctx.message.delete()
         if str(ctx.message.author.id) in vip_list:
                 ## ## MatchMaking Bot Testing channel IDs
                 if ctx.message.guild.id == 651200164169777154:
@@ -248,7 +249,7 @@ async def map(ctx):
         ''' Sends a random map.
         '''
         if str(ctx.message.author) == "TheGlare#1451":
-                await ctx.message.delete()
+                # await ctx.message.delete()
                 await ctx.send("King's Row")
         else:
                 await ctx.send(randomMap())
@@ -258,7 +259,7 @@ async def map(ctx):
 async def mention(ctx):
         ''' Mentions whoever used the command.
         '''
-        await ctx.message.delete()
+        # await ctx.message.delete()
         sleep_timer = random.randint(1, 120)
         print(sleep_timer)
         await asyncio.sleep(sleep_timer)
@@ -414,7 +415,7 @@ async def queue(ctx, role="none"):
 async def roles(ctx, timer=25):
         ''' Prints out the roles needed to matchmake.
         '''
-        await ctx.message.delete()
+        # await ctx.message.delete()
         message = "Roles Needed:\n"
         if tankQueued() != 0:
                 message = message + (tankQueued() + " tanks.\n")
@@ -452,7 +453,7 @@ async def sr(ctx):
 async def status(ctx):
         ''' Prints what the sender is queued for.
         '''
-        await ctx.message.delete()
+        # await ctx.message.delete()
         sender = str(ctx.message.author)
         status = printQueueData(sender)
         await ctx.send(ctx.message.author.mention + status)
@@ -473,7 +474,7 @@ async def status(ctx):
 async def clear(ctx, amount=5):
         ''' Removes a specified amount of messages.
         '''
-        await ctx.message.delete()
+        # await ctx.message.delete()
         if amount > 0:
                 await ctx.channel.purge(limit=amount)
 
@@ -493,7 +494,7 @@ async def coin(ctx):
 async def dicksize(ctx):
         ''' Randomly assigns a number in inches.
         '''
-        await ctx.message.delete()
+        # await ctx.message.delete()
         i = random.randint(321, 987)
         if str(ctx.message.author) == "Panda#3239":
                 i += 2000
@@ -528,7 +529,7 @@ async def dicksize(ctx):
 async def gay(ctx):
         ''' Randomly assigns the user a sexuality. Not always random.
         '''
-        await ctx.message.delete()
+        # await ctx.message.delete()
         i = random.randint(0,100)
         if str(ctx.message.author) == "Aries#0666":
                 await ctx.send(ctx.message.author.mention + " is a mercy main.")
