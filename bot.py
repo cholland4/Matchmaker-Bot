@@ -170,11 +170,14 @@ async def move_to_teams(ctx):
                 for member in ctx.message.guild.members:
                         if member.id in team1:
                                 if member in draft_channel.members:
-                                        await member.move_to(channel1)
+##                                        await member.move_to(channel1)
+                                        await member.edit(voice_channel=channel1)
                                         num_moved += 1
                         elif member.id in team2:
-                                if member in draft_channel.members:                                                await member.move_to(channel2)
-                                num_moved += 1
+                                if member in draft_channel.members:
+##                                        await member.move_to(channel2)
+                                        await member.edit(voice_channel=channel2)
+                                        num_moved += 1
                 await ctx.send("{} users moved.".format(num_moved),
                                delete_after=3)
 
@@ -200,10 +203,12 @@ async def move_to_draft(ctx):
                         
                 num_moved = 0
                 for member in channel1.members:
-                        await member.move_to(draft_channel)
+##                        await member.move_to(draft_channel)
+                        await member.edit(voice_channel=draft_channel)
                         num_moved += 1
                 for member in channel2.members:
-                        await member.move_to(draft_channel)
+##                        await member.move_to(draft_channel)
+                        await member.edit(voice_channel=draft_channel)
                         num_moved += 1
                 await ctx.send("{} users moved.".format(num_moved),
                                delete_after=3)
@@ -338,6 +343,9 @@ async def support(ctx, SR):
         if setSupport(SR, sender, discord_id):
                 await ctx.send(ctx.message.author.mention +
                                ", your support SR has been updated.")
+        elif int(SR) <= 1000:
+                await ctx.send(ctx.message.author.mention +
+                               ", please rank up and try again.")
         else:
                 await ctx.send(ctx.message.author.mention +
                                ", please enter a valid integer.")
@@ -351,6 +359,9 @@ async def damage(ctx, SR):
         if setDamage(SR, sender, discord_id):
                 await ctx.send(ctx.message.author.mention +
                                ", your dps SR has been updated.")
+        elif int(SR) <= 1000:
+                await ctx.send(ctx.message.author.mention +
+                               ", please rank up and try again.")
         else:
                 await ctx.send(ctx.message.author.mention +
                                ", please enter a valid integer.")
@@ -364,6 +375,9 @@ async def tank(ctx, SR):
         if (not SR.isalpha()) and setTank(SR, sender, discord_id):
                 await ctx.send(ctx.message.author.mention +
                                ", your tank SR has been updated.")
+        elif int(SR) <= 1000:
+                await ctx.send(ctx.message.author.mention +
+                               ", please rank up and try again.")
         else:
                 await ctx.send(ctx.message.author.mention +
                                ", please enter a valid integer.")

@@ -178,6 +178,8 @@ def setBtag(btag, PlayerID, discord_id):
     """ Updates the player's battletag.
     """
     try:
+        if PlayerID not in playerData:
+            playerData[PlayerID] = {}
         playerData[PlayerID]["btag"] = btag
         savePlayerData(playerData)
         return True
@@ -210,7 +212,7 @@ def setSupport(sr, PlayerID, discord_id):
     if PlayerID not in playerData:
         playerData[PlayerID] = {}
     sr = int(sr)
-    if sr < 0 or sr > 5000:
+    if sr <= 1000 or sr > 5000:
         return False
     try:
         playerData[PlayerID]["support"] = sr
@@ -230,7 +232,7 @@ def setDamage(sr, PlayerID, discord_id):
     if PlayerID not in playerData:
         playerData[PlayerID] = {}
     sr = int(sr)
-    if sr < 0 or sr > 5000:
+    if sr < 1000 or sr > 5000:
         return False
     try:
         playerData[PlayerID]["dps"] = sr
@@ -250,7 +252,7 @@ def setTank(sr, PlayerID, discord_id):
     if PlayerID not in playerData:
         playerData[PlayerID] = {}
     sr = int(sr)
-    if sr < 0 or sr > 5000:
+    if sr < 1000 or sr > 5000:
         return False
     try:
         playerData[PlayerID]["tank"] = sr
