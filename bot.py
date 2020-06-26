@@ -23,6 +23,7 @@ vip_list = ["176510548702134273", "176550035994050560", "364167513971621890",
 
 @client.event
 async def on_ready():
+
         ''' Prints a message when the bot is ready.
         '''
         loadPlayerData()
@@ -38,7 +39,7 @@ async def vip(ctx):
 
 @client.command(aliases=["btag", "tag"])
 async def battletag(ctx, btag):
-        if setBtag(btag, str(ctx.message.author), ctx.message.author.id):
+        if setBtag(btag, ctx.message.author.id):
                 await ctx.send(ctx.message.author.mention +
                                ", your battletag has been saved. " +
                                "Use .update to pull data from Overwatch " +
@@ -55,7 +56,7 @@ async def update(ctx):
         await ctx.send("This may take a while and will pause all " +
                        "other commands. Please be patient and do not spam it.")
         
-        if pullSR(str(ctx.message.author), ctx.message.author.id):
+        if pullSR(ctx.message.author.id, str(ctx.message.author)):
                 await ctx.send(ctx.message.author.mention +
                                ", success! Your data has been imported." +
                                " If you are not placed or not public, data" +
@@ -163,19 +164,19 @@ async def move_to_teams(ctx):
                         channel2 = client.get_channel(647667443782909955)
                 
                 pdata = loadPlayerData()
-                team1 = get_t1_id(pdata)
-                team2 = get_t2_id(pdata)
-                sender = ctx.message.author
+                team1 = get_team_id(pdata, 1)
+                team2 = get_team_id(pdata, 2)
+                # sender = ctx.message.author
                 num_moved = 0
                 for member in ctx.message.guild.members:
                         if member.id in team1:
                                 if member in draft_channel.members:
-##                                        await member.move_to(channel1)
+                                        # await member.move_to(channel1)
                                         await member.edit(voice_channel=channel1)
                                         num_moved += 1
                         elif member.id in team2:
                                 if member in draft_channel.members:
-##                                        await member.move_to(channel2)
+                                        # await member.move_to(channel2)
                                         await member.edit(voice_channel=channel2)
                                         num_moved += 1
                 await ctx.send("{} users moved.".format(num_moved),
@@ -239,7 +240,7 @@ async def captains(ctx):
 async def team(ctx):
         ''' Reminds the sender what team they're on.
         '''
-        sender = str(ctx.message.author)
+        sender = str(ctx.message.author.id)
         team = getPlayerTeam(sender)
         if team == "-1":
                 await ctx.send(ctx.message.author.mention +
@@ -340,7 +341,7 @@ async def support(ctx, SR):
         '''
         sender = str(ctx.message.author)
         discord_id = ctx.message.author.id
-        if setSupport(SR, sender, discord_id):
+        if setSupport(SR, discord_id, sender):
                 await ctx.send(ctx.message.author.mention +
                                ", your support SR has been updated.")
         elif int(SR) <= 1000:
@@ -356,7 +357,7 @@ async def damage(ctx, SR):
         '''
         sender = str(ctx.message.author)
         discord_id = ctx.message.author.id
-        if setDamage(SR, sender, discord_id):
+        if setDamage(SR, discord_id, sender):
                 await ctx.send(ctx.message.author.mention +
                                ", your dps SR has been updated.")
         elif int(SR) <= 1000:
@@ -372,7 +373,7 @@ async def tank(ctx, SR):
         '''
         sender = str(ctx.message.author)
         discord_id = ctx.message.author.id
-        if (not SR.isalpha()) and setTank(SR, sender, discord_id):
+        if (not SR.isalpha()) and setTank(SR, discord_id, sender):
                 await ctx.send(ctx.message.author.mention +
                                ", your tank SR has been updated.")
         elif int(SR) <= 1000:
@@ -411,14 +412,14 @@ async def queue(ctx, role="none"):
                                 roles_needed = ["tank", "support", "dps"]
                         
                         rand = random.randint(0, len(roles_needed)-1)
-                        sender = str(ctx.message.author)
+                        sender = str(ctx.message.author.id)
                         message = (queueFor(roles_needed[rand], sender))
                         await ctx.send(ctx.message.author.mention + ", " +
                                        message)
                         await roles(ctx, 10)
                         
                 else:
-                        sender = str(ctx.message.author)
+                        sender = str(ctx.message.author.id)
                         message = (queueFor(role, sender))
                         await ctx.send(ctx.message.author.mention + ", " +
                                        message)
@@ -446,7 +447,7 @@ async def roles(ctx, timer=25):
 async def leave(ctx):
         ''' Leaves the queue.
         '''
-        sender = str(ctx.message.author)
+        sender = str(ctx.message.author.id)
         message = deQueue(sender)
         await roles(ctx, 10)
 
@@ -456,9 +457,9 @@ async def sr(ctx):
         ''' Prints out the player's saved SR values.
         '''
         try:
-                sender = str(ctx.message.author)
+                sender = str(ctx.message.author).id
                 sr = printPlayerData(sender)
-                await ctx.send(sr)
+                await ctx.send(ctx.message.author.mention + "\n" + sr)
         except:
                 await ctx.send("Error 404: SR doesn't exist")
 
@@ -468,7 +469,7 @@ async def status(ctx):
         ''' Prints what the sender is queued for.
         '''
         # await ctx.message.delete()
-        sender = str(ctx.message.author)
+        sender = str(ctx.message.author.id)
         status = printQueueData(sender)
         await ctx.send(ctx.message.author.mention + status)
 

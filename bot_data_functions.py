@@ -8,14 +8,14 @@ from bs4 import BeautifulSoup
 def savePlayerData(playerData):
     ''' Saves the hashmap of player data.
     '''
-    with open("data.json", "w") as f:
+    with open("newdata.json", "w") as f:
         json.dump(playerData, f, indent=4)
 
 
 def loadPlayerData():
     ''' Loads the hashmap of player data.
     '''
-    with open('data.json', 'r') as f:
+    with open('newdata.json', 'r') as f:
         playerData = json.load(f)
     return playerData
 
@@ -33,7 +33,7 @@ def clearQueue():
     '''
     global numQueued
     for player in playerData:
-        playerData[player]["queue"] = "none"
+        playerData[playerID]["queue"] = "none"
     savePlayerData(playerData)
     for role in numQueued:
         numQueued[role] = 0
@@ -98,16 +98,16 @@ def adjust(winner):
     global playerData
     playerData = loadPlayerData()
     if(winner != 0):
-        for player in playerData:
+        for playerID in playerData:
             playerData = loadPlayerData()
             if(playerData[player]["team"] == winner):
-                role = playerData[player]["queue"]
-                playerData[player][role] += 50
-            elif(playerData[player]["team"] != -1):
-                role = playerData[player]["queue"]
-                playerData[player][role] -= 50
-            playerData[player]["team"] = -1
-            playerData[player]["queue"] = "none"
+                role = playerData[playerID]["queue"]
+                playerData[playerID][role] += 50
+            elif(playerData[playerID]["team"] != -1):
+                role = playerData[playerID]["queue"]
+                playerData[playerID][role] -= 50
+            playerData[playerID]["team"] = -1
+            playerData[playerID]["queue"] = "none"
             savePlayerData(playerData)
     clearQueue()
 
@@ -163,7 +163,7 @@ def webScrape(battletag):
     tank = dps = supp = -1
 
     for i in range(len(ranks)):
-        rank_role = ranks[i].find(class_= 'competitive-rank-role-icon')
+        rank_role = ranks[i].find(class_='competitive-rank-role-icon')
         role_sr = ranks[i].find(class_='competitive-rank-level').text
         if "tank" in str(rank_role):
             tank = int(role_sr)
@@ -174,7 +174,7 @@ def webScrape(battletag):
     return [tank, dps, supp]
 
 
-def setBtag(btag, PlayerID, discord_id):
+def setBtag(btag, PlayerID):
     """ Updates the player's battletag.
     """
     try:
@@ -187,7 +187,7 @@ def setBtag(btag, PlayerID, discord_id):
         return False
 
 
-def pullSR(PlayerID, discord_id):
+def pullSR(PlayerID, playerName):
     """ Updates the player's SR from their online profile.
     """
     try:
@@ -196,17 +196,17 @@ def pullSR(PlayerID, discord_id):
         if sr_list == [-1, -1, -1]:
             return False
         if sr_list[0] != -1:
-            setTank(sr_list[0], PlayerID, discord_id)
+            setTank(sr_list[0], PlayerID, playerName)
         if sr_list[1] != -1:
-            setDamage(sr_list[1], PlayerID, discord_id)
+            setDamage(sr_list[1], PlayerID, playerName)
         if sr_list[2] != -1:
-            setSupport(sr_list[2], PlayerID, discord_id)
+            setSupport(sr_list[2], PlayerID, playerName)
         return True
     except:
         return False
 
 
-def setSupport(sr, PlayerID, discord_id):
+def setSupport(sr, PlayerID, playerName):
     """ Updates the player's support SR.
     """
     if PlayerID not in playerData:
@@ -218,15 +218,15 @@ def setSupport(sr, PlayerID, discord_id):
         playerData[PlayerID]["support"] = sr
         playerData[PlayerID]["queue"] = "none"
         playerData[PlayerID]["team"] = -1
-        if "id" not in playerData[PlayerID].keys():
-            playerData[PlayerID]["id"] = discord_id
+        if "name" not in playerData[PlayerID].keys():
+            playerData[PlayerID]["name"] = playerName
         savePlayerData(playerData)
         return True
     except:
         return False
 
 
-def setDamage(sr, PlayerID, discord_id):
+def setDamage(sr, PlayerID, playerName):
     """ Updates the player's support SR.
     """
     if PlayerID not in playerData:
@@ -238,15 +238,15 @@ def setDamage(sr, PlayerID, discord_id):
         playerData[PlayerID]["dps"] = sr
         playerData[PlayerID]["queue"] = "none"
         playerData[PlayerID]["team"] = -1
-        if "id" not in playerData[PlayerID].keys():
-            playerData[PlayerID]["id"] = discord_id
+        if "name" not in playerData[PlayerID].keys():
+            playerData[PlayerID]["name"] = playerName
         savePlayerData(playerData)
         return True
     except:
         return False
 
 
-def setTank(sr, PlayerID, discord_id):
+def setTank(sr, PlayerID, playerName):
     """ Updates the player's support SR.
     """
     if PlayerID not in playerData:
@@ -258,8 +258,8 @@ def setTank(sr, PlayerID, discord_id):
         playerData[PlayerID]["tank"] = sr
         playerData[PlayerID]["queue"] = "none"
         playerData[PlayerID]["team"] = -1
-        if "id" not in playerData[PlayerID].keys():
-            playerData[PlayerID]["id"] = discord_id
+        if "name" not in playerData[PlayerID].keys():
+            playerData[PlayerID]["name"] = playerName
         savePlayerData(playerData)
         return True
     except:
@@ -296,7 +296,6 @@ def printPlayerData(PlayerID):
             message = message + "\nTank: " + str(pData[PlayerID]["tank"])
     if message == "":
         message = "No SR data recorded."
-    message = PlayerID[:-5] + message
     return message
 
 
@@ -327,7 +326,7 @@ def printQueue():
     '''
     pData = getAllPlayerData()
     queue = ""
-    for player in pData.keys():
+    for playerID in pData.keys():
         if pData[player]["queue"] != "none":
             queue = queue + player[:-5] + ": " + pData[player]["queue"] + "\n"
     if queue == "":
@@ -353,14 +352,14 @@ def getTeam(mmData, teamNum):
     dps = {}
     numSupp = 0
     numDPS = 0
-    for player in mmData.keys():
-        if mmData[player]["team"] == teamNum:
-            if mmData[player]["queue"] == "tank":
-                tanks[player] = mmData[player]["queue"]
-            elif mmData[player]["queue"] == "dps":
-                dps[player] = mmData[player]["queue"]
+    for playerID in mmData.keys():
+        if mmData[playerID]["team"] == teamNum:
+            if mmData[playerID]["queue"] == "tank":
+                tanks[playerID] = mmData[playerID]["queue"]
+            elif mmData[playerID]["queue"] == "dps":
+                dps[playerID] = mmData[playerID]["queue"]
             else:
-                team[player] = mmData[player]["queue"]
+                team[playerID] = mmData[playerID]["queue"]
     team.update(dps)
     team.update(tanks)
     return team
@@ -375,14 +374,16 @@ def printTeams(mmList):
     teamA = "Team 1: Avg = " + str(mmList[1]) + "\n"
     teamB = "Team 2: Avg = " + str(mmList[2]) + "\n"
     
-    for player in team1.keys():
-        teamA = teamA + player + \
-                (" " * (32-len(player))) + mmData[player]["queue"] + \
+    for playerID in team1.keys():
+        playerName = mmData[playerID]["name"]
+        teamA = teamA + playerName + \
+                (" " * (32-len(playerName))) + mmData[playerID]["queue"] + \
                 "\n"
         
-    for player in team2.keys():
-        teamB = teamB + player + \
-                (" " * (32-len(player))) + mmData[player]["queue"] + \
+    for playerID in team2.keys():
+        playerName = mmData[playerID]["name"]
+        teamB = teamB + playerName + \
+                (" " * (32-len(playerName))) + mmData[playerID]["queue"] + \
                 "\n"
         
     message = "```\n" + (teamA) + "\n" + (teamB) + "```"
@@ -397,21 +398,11 @@ def getPlayerTeam(playerID):
     return team
 
 
-def get_t1_id(playerData):
-    ''' Returns a list of discord user ID tags for members of team 1.
+def get_team_id(playerData, teamnum):
+    ''' Returns a list of discord user ID tags for members of specified.
     '''
-    team1 = []
-    for player in playerData.keys():
-        if playerData[player]["team"] == 1:
-            team1.append(playerData[player]["id"])
-    return team1
-
-
-def get_t2_id(playerData):
-    ''' Returns a list of discord user ID tags for members of team 2.
-    '''
-    team2 = []
-    for player in playerData.keys():
-        if playerData[player]["team"] == 2:
-            team2.append(playerData[player]["id"])
-    return team2
+    team_list = []
+    for playerID in playerData.keys():
+        if playerData[playerID]["team"] == teamnum:
+            team_list.append(playerID)
+    return team_list
