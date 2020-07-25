@@ -668,4 +668,4 @@ async def gay(ctx):
                                        " is a furry.")
 
 
-client.run("NzA3NzI0OTUzMzUyNTM2MTU2.XxnZkw.Z8dtIIYXd8mP74fymftbddHrs3U")
+client.run("token")
