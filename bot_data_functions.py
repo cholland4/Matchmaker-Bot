@@ -5,151 +5,200 @@ import requests
 from bs4 import BeautifulSoup
 
 
-def savePlayerData(playerData):
-    ''' Saves the hashmap of player data.
-    '''
-    with open("newdata.json", "w") as f:
-        json.dump(playerData, f, indent=4)
+def create_guild(guild_id):
+	allData = loadAllData()
+	if guild_id not in allData.keys():
+                allData[guild_id] = {}
+                allData[guild_id]["vip_list"] = ["176510548702134273"]
+                allData[guild_id]["game_status"] = False
+                allData[guild_id]["msg"] = None
+                allData[guild_id]["response"] = None
+                allData[guild_id]["draft_channel"] = None
+                allData[guild_id]["t1_channel"] = None
+                allData[guild_id]["t2_channel"] = None
+                allData[guild_id]["num_queued"] = {"tank":0, "dps":0, "support":0}
+                allData[guild_id]["Players"] = {}
+	saveAllData(allData)
+	
+	
+def delete_guild(guild_id):
+	allData = loadAllData()
+	allData.pop(guild_id)
+	saveAllData(allData)
 
 
-def loadPlayerData():
-    ''' Loads the hashmap of player data.
-    '''
-    with open('newdata.json', 'r') as f:
-        playerData = json.load(f)
-    return playerData
+def setChannelID(guild_id, channel_name, channel_id):
+        allData[guild_id][channel_name] = int(channel_id)
+        saveAllData(allData)
+
+def getChannelID(guild_id, channel_name):
+        return allData[guild_id][channel_name]
 
 
-playerData = loadPlayerData()
-numQueued = {"tank":0, "dps":0, "support":0}
+def setGameStatus(guild_id, new_status):
+        allData[guild_id]["game_status"] = new_status
+        saveAllData(allData)
 
-for player in playerData:
-    playerData[player]["queue"] = "none"
-    playerData[player]["team"] = -1
-savePlayerData(playerData)
+def gameStatus(guild_id):
+        return allData[guild_id]["game_status"]
 
-def clearQueue():
+
+def addVip(guild_id, user_id):
+        allData[guild_id]["vip_list"].append(user_id)
+        saveAllData(allData)
+
+def removeVip(guild_id, user_id):
+        if user_id in allData[guild_id]["vip_list"]:
+                allData[guild_id]["vip_list"].remove(user_id)
+        saveAllData(allData)
+
+
+def getVipList(guild_id):
+        return allData[guild_id]["vip_list"]
+                
+	
+def saveAllData(allData):
+	''' Saves the hashmap of player data.
+	'''
+	with open("data.json", "w") as f:
+		json.dump(allData, f, indent=4)
+
+
+def loadAllData():
+	with open('data.json', 'r') as f:
+		allData = json.load(f)
+	return allData
+	
+
+def loadPlayerData(guild_id):
+	allData = loadAllData()
+	playerData = allData[guild_id]["Players"]
+	return playerData
+
+allData = loadAllData()
+#numQueued = {"tank":0, "dps":0, "support":0
+
+for guild_id in allData:
+	for playerID in allData[guild_id]["Players"]:
+		allData[guild_id]["Players"][playerID]["queue"] = "none"
+		allData[guild_id]["Players"][playerID]["team"] = -1
+saveAllData(allData)
+
+def clearQueue(guild_id):
     ''' Clears the number of players queued and empties the queue.
     '''
-    global numQueued
-    for player in playerData:
-        playerData[playerID]["queue"] = "none"
-    savePlayerData(playerData)
-    for role in numQueued:
-        numQueued[role] = 0
-    return numQueued
+    for playerID in allData[guild_id]["Players"]:
+        allData[guild_id]["Players"][playerID]["queue"] = "none"
+    saveAllData(allData)
+    for role in allData[guild_id]["num_queued"]:
+        allData[guild_id]["num_queued"][role] = 0
 
 
-numQueued = clearQueue()
-
-
-def queueFor(role, PlayerID):
+def queueFor(role, PlayerID, guild_id):
     ''' Removes the player from the queue
         Sets the player's queued role to whatever they specified.
         Updates number of players queued for each role.
     '''
-    if PlayerID not in playerData.keys():
+    if PlayerID not in allData[guild_id]["Players"].keys():
         return("You don't have any stored data.\n")
-    global numQueued
-    if role in playerData[PlayerID]:
-        deQueue(PlayerID)
-        playerData[PlayerID]["queue"] = role
-        savePlayerData(playerData)
+    if role in allData[guild_id]["Players"][PlayerID]:
+        deQueue(PlayerID, guild_id)
+        allData[guild_id]["Players"][PlayerID]["queue"] = role
+        saveAllData(allData)
         if role == "tank":
-            numQueued["tank"] += 1
+            allData[guild_id]["num_queued"]["tank"] += 1
             return ("Queued for tank.\n")
         elif role == "damage" or role == "dps":
-            numQueued["dps"] += 1
+            allData[guild_id]["num_queued"]["dps"] += 1
             return ("Queued for dps.\n")
         elif role == "support" or role == "supp":
-            numQueued["support"] += 1
+            allData[guild_id]["num_queued"]["support"] += 1
             return ("Queued for support.\n")
         elif role == "none":
-            deQueue(PlayerID)
+            deQueue(PlayerID, guild_id)
             return ("Left the queue.\n")
     else:
         return("Invalid role.\n")
 
 
-def suppQueued():
+def suppQueued(guild_id):
     ''' Returns the number of support players needed to fill the queue.
     '''
-    if numQueued["support"] < 4:
-        numNeeded = 4 - numQueued["support"]
+    if allData[guild_id]["num_queued"]["support"] < 4:
+        numNeeded = 4 - allData[guild_id]["num_queued"]["support"]
         return str(numNeeded)
     else:
         return 0
 
 
-def tankQueued():
+def tankQueued(guild_id):
     ''' Returns the number of tank players needed to fill the queue.
     '''
-    if numQueued["tank"] < 4:
-        numNeeded = 4 - numQueued["tank"]
+    if allData[guild_id]["num_queued"]["tank"] < 4:
+        numNeeded = 4 - allData[guild_id]["num_queued"]["tank"]
         return str(numNeeded)
     else:
         return 0
 
 
-def adjust(winner):
+def adjust(winner, guild_id):
     ''' Increases the winning team's SR by 100 for the role they queued.
         Decreases the losing team's SR by 100 for the role they queued.
     '''
-    global playerData
-    playerData = loadPlayerData()
+    global allData
+    allData = loadAllData()
     if(winner != 0):
-        for playerID in playerData:
-            playerData = loadPlayerData()
-            if(playerData[player]["team"] == winner):
-                role = playerData[playerID]["queue"]
-                playerData[playerID][role] += 50
-            elif(playerData[playerID]["team"] != -1):
-                role = playerData[playerID]["queue"]
-                playerData[playerID][role] -= 50
-            playerData[playerID]["team"] = -1
-            playerData[playerID]["queue"] = "none"
-            savePlayerData(playerData)
-    clearQueue()
+        for playerID in allData[guild_id]["Players"]:
+            allData = loadAllData()
+            if(allData[guild_id]["Players"][playerID]["team"] == winner):
+                role = allData[guild_id]["Players"][playerID]["queue"]
+                allData[guild_id]["Players"][playerID][role] += 50
+            elif(allData[guild_id]["Players"][playerID]["team"] != -1):
+                role = allData[guild_id]["Players"][playerID]["queue"]
+                allData[guild_id]["Players"][playerID][role] -= 50
+            allData[guild_id]["Players"][playerID]["team"] = -1
+            allData[guild_id]["Players"][playerID]["queue"] = "none"
+            saveAllData(allData)
+    clearQueue(guild_id)
 
 
-def dpsQueued():
+def dpsQueued(guild_id):
     ''' Returns the number of dps players needed to fill the queue.
     '''
-    if numQueued["dps"] < 4:
-        numNeeded = 4 - numQueued["dps"]
+    if allData[guild_id]["num_queued"]["dps"] < 4:
+        numNeeded = 4 - allData[guild_id]["num_queued"]["dps"]
         return str(numNeeded)
     else:
         return 0
 
 
-def allQueued():
+def allQueued(guild_id):
     ''' Returns true if all queue conditions are met.
     '''
-    if dpsQueued() != 0:
+    if dpsQueued(guild_id) != 0:
         return False
-    if tankQueued() != 0:
+    if tankQueued(guild_id) != 0:
         return False
-    if suppQueued() != 0:
+    if suppQueued(guild_id) != 0:
         return False
     return True
 
 
-def deQueue(PlayerID):
+def deQueue(PlayerID, guild_id):
     ''' Removes the player from the queue.
         Updates number of players queued for each role.
     '''
-    global numQueued
-    role = playerData[PlayerID]["queue"]
-    playerData[PlayerID]["queue"] = "none"
+    role = allData[guild_id]["Players"][PlayerID]["queue"]
+    allData[guild_id]["Players"][PlayerID]["queue"] = "none"
     if role == "tank":
-        numQueued["tank"] -= 1
+        allData[guild_id]["num_queued"]["tank"] -= 1
     elif role == "damage" or role == "dps":
-        numQueued["dps"] -= 1
+        allData[guild_id]["num_queued"]["dps"] -= 1
     elif role == "support":
-        numQueued["support"] -= 1
+        allData[guild_id]["num_queued"]["support"] -= 1
     elif role == "none":
         return "Not in queue.\n"
-    savePlayerData(playerData)
+    saveAllData(allData)
     return "Left the queue.\n"
 
 
@@ -174,135 +223,141 @@ def webScrape(battletag):
     return [tank, dps, supp]
 
 
-def setBtag(btag, PlayerID):
+def setBtag(btag, PlayerID, guild_id):
     """ Updates the player's battletag.
     """
     try:
-        if PlayerID not in playerData:
-            playerData[PlayerID] = {}
-        playerData[PlayerID]["btag"] = btag
-        savePlayerData(playerData)
+        if PlayerID not in allData[guild_id]["Players"]:
+            allData[guild_id]["Players"][PlayerID] = {}
+        allData[guild_id]["Players"][PlayerID]["btag"] = btag
+        saveAllData(allData)
         return True
     except:
         return False
 
 
-def pullSR(PlayerID, playerName):
+def pullSR(PlayerID, playerName, guild_id):
     """ Updates the player's SR from their online profile.
     """
     try:
-        battletag = playerData[PlayerID]["btag"]
+        battletag = allData[guild_id]["Players"][PlayerID]["btag"]
         sr_list = webScrape(battletag)
         if sr_list == [-1, -1, -1]:
             return False
         if sr_list[0] != -1:
-            setTank(sr_list[0], PlayerID, playerName)
+            setTank(sr_list[0], PlayerID, playerName, guild_id)
         if sr_list[1] != -1:
-            setDamage(sr_list[1], PlayerID, playerName)
+            setDamage(sr_list[1], PlayerID, playerName, guild_id)
         if sr_list[2] != -1:
-            setSupport(sr_list[2], PlayerID, playerName)
+            setSupport(sr_list[2], PlayerID, playerName, guild_id)
         return True
     except:
         return False
 
 
-def setSupport(sr, PlayerID, playerName):
+def setSupport(sr, PlayerID, playerName, guild_id):
     """ Updates the player's support SR.
     """
-    if PlayerID not in playerData:
-        playerData[PlayerID] = {}
+    allData = loadAllData()
+    if PlayerID not in allData[guild_id]["Players"].keys():
+        allData[guild_id]["Players"][PlayerID] = {}
     sr = int(sr)
     if sr <= 1000 or sr > 5000:
         return False
     try:
-        playerData[PlayerID]["support"] = sr
-        playerData[PlayerID]["queue"] = "none"
-        playerData[PlayerID]["team"] = -1
-        if "name" not in playerData[PlayerID].keys():
-            playerData[PlayerID]["name"] = playerName
-        savePlayerData(playerData)
+        allData[guild_id]["Players"][PlayerID]["support"] = sr
+        allData[guild_id]["Players"][PlayerID]["queue"] = "none"
+        allData[guild_id]["Players"][PlayerID]["team"] = -1
+        if "name" not in allData[guild_id]["Players"][PlayerID].keys():
+            allData[guild_id]["Players"][PlayerID]["name"] = playerName
+        saveAllData(allData)
         return True
     except:
         return False
 
 
-def setDamage(sr, PlayerID, playerName):
+def setDamage(sr, PlayerID, playerName, guild_id):
     """ Updates the player's support SR.
     """
-    if PlayerID not in playerData:
-        playerData[PlayerID] = {}
+    allData = loadAllData()
+    if PlayerID not in allData[guild_id]["Players"].keys():
+        allData[guild_id]["Players"][PlayerID] = {}
     sr = int(sr)
     if sr < 1000 or sr > 5000:
         return False
     try:
-        playerData[PlayerID]["dps"] = sr
-        playerData[PlayerID]["queue"] = "none"
-        playerData[PlayerID]["team"] = -1
-        if "name" not in playerData[PlayerID].keys():
-            playerData[PlayerID]["name"] = playerName
-        savePlayerData(playerData)
+        allData[guild_id]["Players"][PlayerID]["dps"] = sr
+        allData[guild_id]["Players"][PlayerID]["queue"] = "none"
+        allData[guild_id]["Players"][PlayerID]["team"] = -1
+        if "name" not in allData[guild_id]["Players"][PlayerID].keys():
+            allData[guild_id]["Players"][PlayerID]["name"] = playerName
+        saveAllData(allData)
         return True
     except:
         return False
 
 
-def setTank(sr, PlayerID, playerName):
+def setTank(sr, PlayerID, playerName, guild_id):
     """ Updates the player's support SR.
     """
-    if PlayerID not in playerData:
-        playerData[PlayerID] = {}
+    allData = loadAllData()
+    if PlayerID not in allData[guild_id]["Players"].keys():
+        allData[guild_id]["Players"][PlayerID] = {}
     sr = int(sr)
     if sr < 1000 or sr > 5000:
         return False
     try:
-        playerData[PlayerID]["tank"] = sr
-        playerData[PlayerID]["queue"] = "none"
-        playerData[PlayerID]["team"] = -1
-        if "name" not in playerData[PlayerID].keys():
-            playerData[PlayerID]["name"] = playerName
-        savePlayerData(playerData)
+        allData[guild_id]["Players"][PlayerID]["tank"] = sr
+        allData[guild_id]["Players"][PlayerID]["queue"] = "none"
+        allData[guild_id]["Players"][PlayerID]["team"] = -1
+        if "name" not in allData[guild_id]["Players"][PlayerID].keys():
+            allData[guild_id]["Players"][PlayerID]["name"] = playerName
+        saveAllData(allData)
         return True
     except:
         return False
 
 
-def clearPlayerData():
+def clearPlayerData(guild_id):
     ''' Clears playerData of everything.
     '''
-    playerData.clear()
-    savePlayerData(playerData)
-    return playerData
+    allData[guild_id]["Players"].clear()
+    saveAllData(allData)
+    return allData
 
 
-def getPlayerData(PlayerID):
+def getPlayerData(PlayerID, guild_id):
     ''' Returns a specific player's data.
         If possible, should be formatted.
     '''
-    pData = loadPlayerData()
+    pData = loadPlayerData(guild_id)
     return pData[PlayerID]
 
 
-def printPlayerData(PlayerID):
+def printPlayerData(PlayerID, guild_id):
     ''' Returns a formatted string with specific user data.
     '''
-    pData = getAllPlayerData()
-    message = ""
-    for key in pData[PlayerID].keys():
+    pData = getPlayerData(PlayerID, guild_id)
+    t_message = ""
+    d_message = ""
+    s_message = ""
+    for key in pData.keys():
         if key == "support":
-            message = message + "\nSupport: " + str(pData[PlayerID]["support"])
+            s_message = "\nSupport: " + str(pData["support"])
         elif key == "dps":
-            message = message + "\nDPS: " + str(pData[PlayerID]["dps"])
+            d_message = "\nDPS: " + str(pData["dps"])
         elif key == "tank":
-            message = message + "\nTank: " + str(pData[PlayerID]["tank"])
+            t_message = "\nTank: " + str(pData["tank"])
+    message = t_message + d_message + s_message
     if message == "":
         message = "No SR data recorded."
     return message
 
 
-def printAllPlayerData():
+def printAllPlayerData(guild_id):
     ''' Returns a formatted string with all user data.
     '''
-    playerData = loadPlayerData()
+    playerData = loadAllPlayerData(guild_id)
     message = ""
     for PlayerID in playerData.keys():
         message = message + printPlayerData(PlayerID) + "\n\n"
@@ -311,38 +366,39 @@ def printAllPlayerData():
     return message
 
 
-def printQueueData(PlayerID):
+def printQueueData(PlayerID, guild_id):
     ''' Returns a formatted string about a specific user's queue status.
     '''
-    if playerData[PlayerID]["queue"] == "none":
+    if allData[guild_id]["Players"][PlayerID]["queue"] == "none":
         message = " is not queued!"
     else:
-        message = " is queued for: " + playerData[PlayerID]["queue"]
+        message = " is queued for: " + allData[guild_id]["Players"][PlayerID]["queue"]
     return message
 
 
-def printQueue():
+def printQueue(guild_id):
     ''' Returns a formatted string with all the users in queue.
     '''
-    pData = getAllPlayerData()
+    pData = getAllPlayerData(guild_id)
     queue = ""
     for playerID in pData.keys():
-        if pData[player]["queue"] != "none":
-            queue = queue + player[:-5] + ": " + pData[player]["queue"] + "\n"
+        if pData[playerID]["queue"] != "none":
+            queue = queue + pData[playerID]["name"][:-5] + \
+                    ": " + pData[playerID]["queue"] + "\n"
     if queue == "":
         queue = "Nobody is in queue."
     return queue
 
 
-def getAllPlayerData():
+def getAllPlayerData(guild_id):
     ''' Returns all player's data.
         If possible, should be formatted.
     '''
-    pData = loadPlayerData()
+    pData = loadPlayerData(guild_id)
     return pData
 
 key_queue = "queue"
-
+# I got this far with rewriting playerData with allData or allData[guild_id]["Players"]
 
 def getTeam(mmData, teamNum):
     ''' Gets teams.
@@ -390,19 +446,19 @@ def printTeams(mmList):
     return message
 
 
-def getPlayerTeam(playerID):
+def getPlayerTeam(playerID, guild_id):
     ''' Returns the team number that a specific player is on
     '''
-    playerData = loadPlayerData()
+    playerData = loadPlayerData(guild_id)
     team = str(playerData[playerID]["team"])
     return team
 
 
-def get_team_id(playerData, teamnum):
+def get_team_id(playerData, teamnum, guild_id):
     ''' Returns a list of discord user ID tags for members of specified.
     '''
     team_list = []
-    for playerID in playerData.keys():
-        if playerData[playerID]["team"] == teamnum:
+    for playerID in allData[guild_id]["Players"].keys():
+        if allData[guild_id]["Players"][playerID]["team"] == teamnum:
             team_list.append(playerID)
     return team_list

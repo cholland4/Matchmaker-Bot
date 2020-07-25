@@ -9,37 +9,57 @@ from discord.utils import get
 import datetime
 
 client = commands.Bot(command_prefix = ".")
-global game_in_progress
-game_in_progress = False
-
-global msg
-global response
-
-vip_list = ["176510548702134273", "176550035994050560", "364167513971621890",
-            "238471482009714688"]
+# # vip_list = ["176510548702134273", "176550035994050560", "364167513971621890",
+            #"238471482009714688"]
 
 ## Cameron, Michael, Tony, Panda
 
+@client.event
+async def on_guild_join(guild):
+	create_guild(guild.id)
+	
+	
+@client.event
+async def on_guild_remove(guild):
+	delete_guild(guild.id)
 
+	
 @client.event
 async def on_ready():
 
         ''' Prints a message when the bot is ready.
         '''
-        loadPlayerData()
+        loadAllData()
         print("bot is ready")
 
-
 @client.command()
-async def vip(ctx):
-        global vip_list
+async def createServerData(ctx):
+        guild_id = str(ctx.message.guild.id)
         if str(ctx.message.author.id) == "176510548702134273":
-                vip_list.append(str(ctx.message.mentions[0].id))
+                create_guild(guild_id)
+                await ctx.send("Server template set up.")
+
+        
+@client.command()
+async def vip(ctx, action):
+        guild_id = str(ctx.message.guild.id)
+        if str(ctx.message.author.id) == "176510548702134273":
+                if action == "add":
+                        for user in ctx.message.mentions:
+                                addVip(guild_id, str(user.id))
+                        await ctx.send("VIP status granted.")
+                elif action == "remove" or action == "revoke":
+                        for user in ctx.message.mentions:
+                                removeVip(guild_id, str(user.id))
+                        await ctx.send("VIP status revoked.")
+        else:
+                await ctx.send("You do not have permission to add VIPs!")
 
 
 @client.command(aliases=["btag", "tag"])
 async def battletag(ctx, btag):
-        if setBtag(btag, ctx.message.author.id):
+        guild_id = str(ctx.message.guild.id)
+        if setBtag(btag, str(ctx.message.author.id), guild_id):
                 await ctx.send(ctx.message.author.mention +
                                ", your battletag has been saved. " +
                                "Use .update to pull data from Overwatch " +
@@ -53,10 +73,11 @@ async def battletag(ctx, btag):
 async def update(ctx):
         ''' Updates the player data based off their in game profile.
         '''
+        guild_id = str(ctx.message.guild.id)
         await ctx.send("This may take a while and will pause all " +
                        "other commands. Please be patient and do not spam it.")
         
-        if pullSR(ctx.message.author.id, str(ctx.message.author)):
+        if pullSR(str(ctx.message.author.id), str(ctx.message.author), guild_id):
                 await ctx.send(ctx.message.author.mention +
                                ", success! Your data has been imported." +
                                " If you are not placed or not public, data" +
@@ -143,6 +164,29 @@ async def shock(ctx):
                        "PSA have a good night see you guys for pugs")
 
 
+@client.command(aliases=["setD"])
+async def setChannelDraft(ctx, channel_id):
+        ''' Enter the channel id of the draft channel.
+        '''
+        guild_id = str(ctx.message.guild.id)
+        setChannelID(guild_id, "draft_channel", channel_id)
+
+
+@client.command(aliases=["setT1"])
+async def setChannel1(ctx, channel_id):
+        ''' Enter the channel id of the team 1 channel.
+        '''
+        guild_id = str(ctx.message.guild.id)
+        setChannelID(guild_id, "t1_channel", channel_id)
+
+
+@client.command(aliases=["setT2"])
+async def setChannel2(ctx, channel_id):
+        ''' Enter the channel id of the team 2 channel.
+        '''
+        guild_id = str(ctx.message.guild.id)
+        setChannelID(guild_id, "t2_channel", channel_id)
+
 
 @client.command(aliases=["mtt"])
 #@commands.has_role('BotMaster')
@@ -150,7 +194,10 @@ async def move_to_teams(ctx):
         ''' Moves people on teams to their respective team channel.
         '''
         # await ctx.message.delete()
+        guild_id = str(ctx.message.guild.id)
+        vip_list = getVipList(guild_id)
         if str(ctx.message.author.id) in vip_list:
+                """
                 ## ## MatchMaking Bot Testing channel IDs
                 if ctx.message.guild.id == 651200164169777154:
                         draft_channel = client.get_channel(709248862828888074)
@@ -162,10 +209,17 @@ async def move_to_teams(ctx):
                         draft_channel = client.get_channel(652717496045928458)
                         channel1 = client.get_channel(647667378334990377)
                         channel2 = client.get_channel(647667443782909955)
+                """
+                draft_channel = client.get_channel(getChannelID(guild_id,
+                                                                "draft_channel"))
+                channel1 = client.get_channel(getChannelID(guild_id,
+                                                           "t1_channel"))
+                channel2 = client.get_channel(getChannelID(guild_id,
+                                                           "t2_channel"))
                 
-                pdata = loadPlayerData()
-                team1 = get_team_id(pdata, 1)
-                team2 = get_team_id(pdata, 2)
+                pdata = loadPlayerData(guild_id)
+                team1 = get_team_id(pdata, 1, guild_id)
+                team2 = get_team_id(pdata, 2, guild_id)
                 # sender = ctx.message.author
                 num_moved = 0
                 for member in ctx.message.guild.members:
@@ -189,7 +243,10 @@ async def move_to_draft(ctx):
         ''' Moves all users from the team channels to the draft channel.
         '''
         # await ctx.message.delete()
+        guild_id = str(ctx.message.guild.id)
+        vip_list = getVipList(guild_id)
         if str(ctx.message.author.id) in vip_list:
+                """
                 ## ## MatchMaking Bot Testing channel IDs
                 if ctx.message.guild.id == 651200164169777154:
                         draft_channel = client.get_channel(709248862828888074)
@@ -201,7 +258,13 @@ async def move_to_draft(ctx):
                         draft_channel = client.get_channel(652717496045928458)
                         channel1 = client.get_channel(647667378334990377)
                         channel2 = client.get_channel(647667443782909955)
-                        
+                """
+                draft_channel = client.get_channel(getChannelID(guild_id,
+                                                                "draft_channel"))
+                channel1 = client.get_channel(getChannelID(guild_id,
+                                                           "t1_channel"))
+                channel2 = client.get_channel(getChannelID(guild_id,
+                                                           "t2_channel"))
                 num_moved = 0
                 for member in channel1.members:
 ##                        await member.move_to(draft_channel)
@@ -219,6 +282,7 @@ async def move_to_draft(ctx):
 async def captains(ctx):
         ''' Picks two users at random from draft channel.
         '''
+        """
         ## ## MatchMaking Bot Testing channel IDs
         if ctx.message.guild.id == 651200164169777154:
                 draft_channel = client.get_channel(709248862828888074)
@@ -226,14 +290,21 @@ async def captains(ctx):
         ## ## We Use this channel IDs
         if ctx.message.guild.id == 442813167148728330:
                 draft_channel = client.get_channel(652717496045928458)
+        """
+                
+        guild_id = str(ctx.message.guild.id)
+        draft_channel = client.get_channel(getChannelID(guild_id, "draft_channel"))
 
-        i = random.randint(0, len(draft_channel.members))
-        j = random.randint(0, len(draft_channel.members))
-        while i == j:
-                j = random.randint(0, len(draft_channel.members))
-        await ctx.send(draft_channel.members[i].mention + " " +
-                       draft_channel.members[j].mention +
-                       " are your captains.")
+        if len(draft_channel.members) < 2:
+                await ctx.send("Not enough players in the draft channel!")
+        else:
+                i = random.randint(0, len(draft_channel.members)-1)
+                j = random.randint(0, len(draft_channel.members)-1)
+                while i == j:
+                        j = random.randint(0, len(draft_channel.members))
+                await ctx.send(draft_channel.members[i].mention + " " +
+                               draft_channel.members[j].mention +
+                               " are your captains.")
 
 
 @client.command()
@@ -241,7 +312,8 @@ async def team(ctx):
         ''' Reminds the sender what team they're on.
         '''
         sender = str(ctx.message.author.id)
-        team = getPlayerTeam(sender)
+        guild_id = str(ctx.message.guild.id)
+        team = getPlayerTeam(sender, guild_id)
         if team == "-1":
                 await ctx.send(ctx.message.author.mention +
                                ", you're not on a team.")
@@ -298,15 +370,15 @@ async def mm(ctx):
                 are queued prints an error message.
         '''
         #await ctx.message.delete()
-        global game_in_progress
-        mylist = getAllPlayerData()
+        guild_id = str(ctx.message.guild.id)
+        mylist = getAllPlayerData(guild_id)
         matchList = matchmake(mylist)
         if matchList[0] != -1:
                 await ctx.send(printTeams(matchList))
-                await client.change_presence(activity=discord.Game(name="a match"))
+                #await client.change_presence(activity=discord.Game(name="a match"))
                 savePlayerData(matchList[0])
                 await ctx.send(randomMap())
-                game_in_progress = True
+                setGameStatus(guild_id, True)
         else:
                 await ctx.send("Error encountered. Are enough players queued?")
         
@@ -315,9 +387,9 @@ async def mm(ctx):
 async def win(ctx, team_num):
         ''' Calls adjust to add or subtract player SR.
         '''
-        global game_in_progress
+        guild_id = str(ctx.message.guild.id)
         if (team_num == "0" or team_num == "1" or team_num == "2") \
-           and game_in_progress:
+           and gameStatus(guild_id):
                 adjust(int(team_num))
                 if team_num != "0":
                         await ctx.send("Congrats Team " +
@@ -327,9 +399,9 @@ async def win(ctx, team_num):
                                        "the teams were perfectly balanced.")
                 clearQueue()
                 await client.change_presence(activity=discord.Game(name=""))
-                game_in_progress = False
+                setGameStatus(guild_id, False)
         else:
-                if(game_in_progress):
+                if(gameStatus(guild_id)):
                         await ctx.send("Please enter a valid team.")
                 else:
                       await ctx.send("No game in progress.")
@@ -340,8 +412,9 @@ async def support(ctx, SR):
         ''' Updates the sender's profile with the new support data.
         '''
         sender = str(ctx.message.author)
-        discord_id = ctx.message.author.id
-        if setSupport(SR, discord_id, sender):
+        discord_id = str(ctx.message.author.id)
+        guild_id = str(ctx.message.guild.id)
+        if setSupport(SR, discord_id, sender, guild_id):
                 await ctx.send(ctx.message.author.mention +
                                ", your support SR has been updated.")
         elif int(SR) <= 1000:
@@ -356,8 +429,9 @@ async def damage(ctx, SR):
         ''' Updates the sender's profile with the new dps data.
         '''
         sender = str(ctx.message.author)
-        discord_id = ctx.message.author.id
-        if setDamage(SR, discord_id, sender):
+        discord_id = str(ctx.message.author.id)
+        guild_id = str(ctx.message.guild.id)
+        if setDamage(SR, discord_id, sender, guild_id):
                 await ctx.send(ctx.message.author.mention +
                                ", your dps SR has been updated.")
         elif int(SR) <= 1000:
@@ -372,8 +446,9 @@ async def tank(ctx, SR):
         ''' Updates the sender's profile with the new tank data.
         '''
         sender = str(ctx.message.author)
-        discord_id = ctx.message.author.id
-        if (not SR.isalpha()) and setTank(SR, discord_id, sender):
+        discord_id = str(ctx.message.author.id)
+        guild_id = str(ctx.message.guild.id)
+        if setTank(SR, discord_id, sender, guild_id):
                 await ctx.send(ctx.message.author.mention +
                                ", your tank SR has been updated.")
         elif int(SR) <= 1000:
@@ -390,37 +465,38 @@ async def queue(ctx, role="none"):
                 sender's data to place them in the queue for what role
                 they want.
         '''
-        if game_in_progress:
+        guild_id = str(ctx.message.guild.id)
+        if gameStatus(guild_id):
                 await ctx.send("Please report a winner before queuing!")
         else:
                 if role == "none":
                         await ctx.send(ctx.message.author.mention
-                                       + "\n" + printQueue()),
+                                       + "\n" + printQueue(guild_id)),
                                        #delete_after=15)
                 elif role == "clear":
-                        clearQueue()
+                        clearQueue(guild_id)
                         await ctx.send("The queue has been emptied.")
                 elif role == "fill":
                         roles_needed = []
-                        if suppQueued() != 0:
+                        if suppQueued(guild_id) != 0:
                                 roles_needed.append("support")
-                        if tankQueued() != 0:
+                        if tankQueued(guild_id) != 0:
                                 roles_needed.append("tank")
-                        if dpsQueued() != 0:
+                        if dpsQueued(guild_id) != 0:
                                 roles_needed.append("dps")
                         if len(roles_needed) == 0:
                                 roles_needed = ["tank", "support", "dps"]
                         
                         rand = random.randint(0, len(roles_needed)-1)
                         sender = str(ctx.message.author.id)
-                        message = (queueFor(roles_needed[rand], sender))
+                        message = (queueFor(roles_needed[rand], sender, guild_id))
                         await ctx.send(ctx.message.author.mention + ", " +
                                        message)
                         await roles(ctx, 10)
                         
                 else:
                         sender = str(ctx.message.author.id)
-                        message = (queueFor(role, sender))
+                        message = (queueFor(role, sender, guild_id))
                         await ctx.send(ctx.message.author.mention + ", " +
                                        message)
                         await roles(ctx, 10)
@@ -431,13 +507,14 @@ async def roles(ctx, timer=25):
         ''' Prints out the roles needed to matchmake.
         '''
         # await ctx.message.delete()
+        guild_id = str(ctx.message.guild.id)
         message = "Roles Needed:\n"
-        if tankQueued() != 0:
-                message = message + (tankQueued() + " tanks.\n")
-        if dpsQueued() != 0:
-                message = message + (dpsQueued() + " dps.\n")
-        if suppQueued() != 0:
-                message = message + (suppQueued() + " supports.\n")
+        if tankQueued(guild_id) != 0:
+                message = message + (tankQueued(guild_id) + " tanks.\n")
+        if dpsQueued(guild_id) != 0:
+                message = message + (dpsQueued(guild_id) + " dps.\n")
+        if suppQueued(guild_id) != 0:
+                message = message + (suppQueued(guild_id) + " supports.\n")
         if message == "Roles Needed:\n":
                 message = "All roles filled."
         await ctx.send(message, delete_after=timer)
@@ -448,7 +525,8 @@ async def leave(ctx):
         ''' Leaves the queue.
         '''
         sender = str(ctx.message.author.id)
-        message = deQueue(sender)
+        guild_id = str(ctx.message.guild.id)
+        message = deQueue(sender, guild_id)
         await roles(ctx, 10)
 
 
@@ -456,12 +534,13 @@ async def leave(ctx):
 async def sr(ctx):
         ''' Prints out the player's saved SR values.
         '''
-        try:
-                sender = str(ctx.message.author).id
-                sr = printPlayerData(sender)
-                await ctx.send(ctx.message.author.mention + "\n" + sr)
-        except:
-                await ctx.send("Error 404: SR doesn't exist")
+        #try:
+        sender = str(ctx.message.author.id)
+        guild_id = str(ctx.message.guild.id)
+        sr = printPlayerData(sender, guild_id)
+        await ctx.send(ctx.message.author.mention + sr)
+        #except:
+         #       await ctx.send("Error 404: SR doesn't exist")
 
 
 @client.command()
@@ -470,7 +549,8 @@ async def status(ctx):
         '''
         # await ctx.message.delete()
         sender = str(ctx.message.author.id)
-        status = printQueueData(sender)
+        guild_id = str(ctx.message.guild.id)
+        status = printQueueData(sender, guild_id)
         await ctx.send(ctx.message.author.mention + status)
 
 
@@ -570,7 +650,7 @@ async def gay(ctx):
                                        " is closeted :0.")
                 elif (i % 10) == 5:
                         await ctx.send(ctx.message.author.mention +
-                                       " just came out!")
+                                       " is a simp.")
                 elif (i % 11) == 6:
                         await ctx.send(ctx.message.author.mention +
                                        " is pan.")
@@ -588,4 +668,4 @@ async def gay(ctx):
                                        " is a furry.")
 
 
-client.run("NzA3NzI0OTUzMzUyNTM2MTU2.XtS5MQ.N35CrNJ56axgzpasp640Pi3oS6w")
+client.run("NzA3NzI0OTUzMzUyNTM2MTU2.XxnZkw.Z8dtIIYXd8mP74fymftbddHrs3U")

@@ -1,263 +1,87 @@
 {
-    "Archangel#0346": {
-        "support": 2800,
-        "queue": "none",
-        "team": -1,
-        "tank": 2600,
-        "dps": 2250,
-        "id": 176510548702134273,
-        "btag": "Archangel#12958"
+    "651200164169777154": {
+        "vip_list": [
+            "176510548702134273",
+            "177914137836257280"
+        ],
+        "game_status": false,
+        "msg": null,
+        "response": null,
+        "draft_channel": 709248862828888074,
+        "t1_channel": 707749575108198441,
+        "t2_channel": 707749630728732712,
+        "num_queued": {
+            "tank": 0,
+            "dps": 0,
+            "support": 0
+        },
+        "Players": {
+            "364167513971621890": {
+                "btag": "Duncanator02#1164",
+                "queue": "none",
+                "team": -1
+            },
+            "176510548702134273": {
+                "btag": "Archangel#12958",
+                "queue": "none",
+                "team": -1,
+                "support": 3000,
+                "name": "Archangel#0346",
+                "tank": 2900,
+                "dps": 2847
+            }
+        }
     },
-    "TheGlare#1451": {
-        "tank": 3700,
-        "queue": "none",
-        "team": -1,
-        "id": 176550035994050560,
-        "support": 2800,
-        "dps": 2800
+    "442813167148728330": {
+        "vip_list": [
+            "176510548702134273"
+        ],
+        "game_status": false,
+        "msg": null,
+        "response": null,
+        "draft_channel": null,
+        "t1_channel": null,
+        "t2_channel": null,
+        "num_queued": {
+            "tank": 0,
+            "dps": 0,
+            "support": 0
+        },
+        "Players": {
+            "176510548702134273": {
+                "support": 2500,
+                "queue": "none",
+                "team": -1,
+                "name": "Archangel#0346",
+                "tank": 2500,
+                "dps": 2000
+            },
+            "317076692462206978": {
+                "tank": 3000,
+                "queue": "none",
+                "team": -1,
+                "name": "Immortis#6644",
+                "dps": 2600,
+                "support": 2800
+            }
+        }
     },
-    "airyqe#5154": {
-        "dps": 3900,
-        "queue": "none",
-        "team": -1,
-        "id": 219510602379296769,
-        "tank": 3800,
-        "support": 3750
-    },
-    "Duncanator02#5596": {
-        "support": 2750,
-        "queue": "none",
-        "team": -1,
-        "id": 364167513971621890,
-        "tank": 2060,
-        "dps": 1914,
-        "btag": "Duncanator02#1164"
-    },
-    "MusicalDuck#0138": {
-        "tank": 2400,
-        "queue": "none",
-        "team": -1,
-        "id": 388171533589282816,
-        "dps": 3150,
-        "support": 3250
-    },
-    "Timmy#3426": {
-        "dps": 4350,
-        "queue": "none",
-        "team": -1,
-        "id": 345366715279867906,
-        "tank": 3573,
-        "support": 3800,
-        "btag": "sinatraa#11192"
-    },
-    "Panda#3239": {
-        "support": 4047,
-        "queue": "none",
-        "team": -1,
-        "id": 238471482009714688,
-        "tank": 3600,
-        "dps": 3191,
-        "btag": "Panda#16480"
-    },
-    "Scrub#1337": {
-        "tank": 4049,
-        "queue": "none",
-        "team": -1,
-        "id": 208397981437788170,
-        "dps": 3250,
-        "support": 3949
-    },
-    "Aries#0666": {
-        "support": 1000,
-        "queue": "none",
-        "team": -1,
-        "id": 256972883404783616,
-        "tank": 1000,
-        "btag": "SamNimba#1355",
-        "dps": 1000
-    },
-    "MeatofMeat#9866": {
-        "tank": 2470,
-        "queue": "none",
-        "team": -1,
-        "id": 208449704021852170,
-        "dps": 2250
-    },
-    "StodgyMeteor#8420": {
-        "dps": 2975,
-        "queue": "none",
-        "team": -1,
-        "id": 318093722518814721,
-        "tank": 3336,
-        "support": 3007
-    },
-    "Twang#8757": {
-        "tank": 4175,
-        "queue": "none",
-        "team": -1,
-        "id": 176500074543710210,
-        "dps": 3637,
-        "support": 3609,
-        "btag": "Twang#11716"
-    },
-    "Immortis#6644": {
-        "tank": 3050,
-        "queue": "none",
-        "team": -1,
-        "id": 317076692462206978,
-        "dps": 2650,
-        "support": 2550
-    },
-    "Tyrell#2579": {
-        "dps": 3233,
-        "queue": "none",
-        "team": -1,
-        "id": 293888103289061376,
-        "tank": 3600
-    },
-    "Garharu#6012": {
-        "dps": 4000,
-        "queue": "none",
-        "team": -1,
-        "id": 218496623720923138
-    },
-    "sb13sb(Sam Bolen)#5999": {
-        "tank": 1904,
-        "queue": "none",
-        "team": -1,
-        "id": 185875006973149185,
-        "dps": 2386
-    },
-    "Hwilldabeast#9444": {
-        "support": 3750,
-        "queue": "none",
-        "team": -1,
-        "id": 318332509790142464
-    },
-    "ceziun#0451": {
-        "tank": 4450,
-        "queue": "none",
-        "team": -1,
-        "id": 258672823332110337,
-        "dps": 4100,
-        "support": 4400
-    },
-    "neumann147#1880": {
-        "support": 3212,
-        "queue": "none",
-        "team": -1,
-        "id": 200113849695862784,
-        "tank": 2500,
-        "dps": 2000
-    },
-    "riptide#2016": {
-        "support": 3650,
-        "queue": "none",
-        "team": -1,
-        "id": 364172987026374667,
-        "tank": 2300
-    },
-    "BubbLeS#4835": {
-        "tank": 3500,
-        "queue": "none",
-        "team": -1,
-        "id": 121008570224345088,
-        "dps": 3350,
-        "support": 3500
-    },
-    "Eboy Jared#7365": {
-        "tank": 4100,
-        "queue": "none",
-        "team": -1,
-        "id": 402248529042735115,
-        "support": 4250
-    },
-    "Daddy#5174": {
-        "tank": 2750,
-        "queue": "none",
-        "team": -1,
-        "id": 212424403353468928,
-        "dps": 2350,
-        "support": 2450
-    },
-    "buns#0505": {
-        "dps": 3200,
-        "queue": "none",
-        "team": -1,
-        "id": 353326190049624064
-    },
-    "HammerRabi#5464": {
-        "support": 2200,
-        "queue": "none",
-        "team": -1,
-        "id": 297440916791361536
-    },
-    "TheGlare | Michael#1451": {
-        "tank": 3400,
-        "queue": "none",
-        "team": -1,
-        "id": 176550035994050560,
-        "dps": 2650,
-        "support": 3000
-    },
-    "itsya#6270": {
-        "support": 4200,
-        "queue": "none",
-        "team": -1,
-        "id": 250492276319584258,
-        "tank": 3950,
-        "dps": 3600
-    },
-    "Gabe#8599": {
-        "dps": 3150,
-        "queue": "none",
-        "team": -1,
-        "id": 156735098484424705
-    },
-    "riptide#6096": {
-        "support": 3538,
-        "queue": "none",
-        "team": -1,
-        "id": 250087120306307073,
-        "tank": 2300
-    },
-    "wittlebull#1033": {
-        "support": 2200,
-        "queue": "none",
-        "team": -1,
-        "id": 169595539027918848,
-        "dps": 2200,
-        "tank": 2000
-    },
-    "Csaurus#5309": {
-        "tank": 2188,
-        "queue": "none",
-        "team": -1,
-        "id": 649342656325091497,
-        "support": 2009,
-        "dps": 2091
-    },
-    "Blu#9129": {
-        "support": 2600,
-        "queue": "none",
-        "team": -1,
-        "id": 196039344832774145,
-        "tank": 2300,
-        "dps": 1600
-    },
-    "Accurate#7290": {
-        "tank": 4400,
-        "queue": "none",
-        "team": -1,
-        "id": 278269150194040833,
-        "dps": 4350,
-        "support": 4300
-    },
-    "\u015c\u01de\u013f\u0166\u0176#1556": {
-        "dps": 2187,
-        "queue": "none",
-        "team": -1,
-        "id": 341823024569384962,
-        "tank": 2287
+    "729601577450733585": {
+        "vip_list": [
+            "176510548702134273",
+            "364167513971621890"
+        ],
+        "game_status": false,
+        "msg": null,
+        "response": null,
+        "draft_channel": 729604449487552554,
+        "t1_channel": 729604286190977054,
+        "t2_channel": 729604344906907688,
+        "num_queued": {
+            "tank": 0,
+            "dps": 0,
+            "support": 0
+        },
+        "Players": {}
     }
 }
