@@ -1,8 +1,7 @@
 {
     "651200164169777154": {
         "vip_list": [
-            "176510548702134273",
-            "177914137836257280"
+            "176510548702134273"
         ],
         "game_status": false,
         "msg": null,
@@ -25,7 +24,7 @@
                 "btag": "Archangel#12958",
                 "queue": "none",
                 "team": -1,
-                "support": 3000,
+                "support": 2400,
                 "name": "Archangel#0346",
                 "tank": 2900,
                 "dps": 2847
@@ -34,14 +33,16 @@
     },
     "442813167148728330": {
         "vip_list": [
-            "176510548702134273"
+            "176510548702134273",
+            "176500074543710210",
+            "238471482009714688"
         ],
         "game_status": false,
         "msg": null,
         "response": null,
-        "draft_channel": null,
-        "t1_channel": null,
-        "t2_channel": null,
+        "draft_channel": 652717496045928458,
+        "t1_channel": 647667378334990377,
+        "t2_channel": 647667443782909955,
         "num_queued": {
             "tank": 0,
             "dps": 0,
@@ -63,13 +64,19 @@
                 "name": "Immortis#6644",
                 "dps": 2600,
                 "support": 2800
+            },
+            "176550035994050560": {
+                "support": 3000,
+                "team": -1,
+                "name": "TheGlare#1451",
+                "queue": "none"
             }
         }
     },
     "729601577450733585": {
         "vip_list": [
             "176510548702134273",
-            "364167513971621890"
+            "177914137836257280"
         ],
         "game_status": false,
         "msg": null,
@@ -77,6 +84,80 @@
         "draft_channel": 729604449487552554,
         "t1_channel": 729604286190977054,
         "t2_channel": 729604344906907688,
+        "num_queued": {
+            "tank": 0,
+            "dps": 0,
+            "support": 0
+        },
+        "Players": {
+            "304355246208057344": {
+                "tank": 2600,
+                "team": -1,
+                "name": "Sathu#0161",
+                "support": 2200,
+                "dps": 2500,
+                "queue": "none"
+            },
+            "364167513971621890": {
+                "support": 2500,
+                "team": -1,
+                "name": "Duncanator02#5596",
+                "dps": 1500,
+                "tank": 2000,
+                "queue": "none"
+            },
+            "597631704215191557": {
+                "dps": 2100,
+                "team": -1,
+                "name": "ZypherLuna#9125",
+                "tank": 2450,
+                "support": 2700,
+                "queue": "none"
+            },
+            "236006909835083776": {
+                "dps": 2200,
+                "team": -1,
+                "name": "-Alex#3696",
+                "tank": 1900,
+                "support": 2180,
+                "queue": "none"
+            },
+            "184450682999275521": {
+                "support": 2800,
+                "team": -1,
+                "name": "Bell#2080",
+                "tank": 2200,
+                "dps": 2500,
+                "queue": "none"
+            },
+            "310358128157917185": {
+                "support": 3985,
+                "team": -1,
+                "name": "\u0f3a \u32d0 | \ud835\udd41\ud835\udd60\ud835\udd64\ud835\udd59\u0f3b#4638",
+                "tank": 3054,
+                "dps": 3100,
+                "queue": "none"
+            },
+            "176510548702134273": {
+                "queue": "none",
+                "team": -1,
+                "tank": 2900,
+                "dps": 2700,
+                "support": 3000,
+                "name": "Archangel#0346"
+            }
+        }
+    },
+    "673690672397680642": {
+        "vip_list": [
+            "176510548702134273"
+        ],
+        "game_status": false,
+        "msg": null,
+        "response": null,
+        "draft_channel": null,
+        "t1_channel": null,
+        "t2_channel": null,
         "num_queued": {
             "tank": 0,
             "dps": 0,
