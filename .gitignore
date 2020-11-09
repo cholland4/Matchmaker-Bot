@@ -4,3 +4,5 @@
 test_data.json
 mmBotKey.pem
 mmBotKey.ppk
+*.xml
+*.iml
