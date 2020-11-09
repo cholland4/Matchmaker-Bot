@@ -6,3 +6,4 @@ mmBotKey.pem
 mmBotKey.ppk
 *.xml
 *.iml
+token.txt
