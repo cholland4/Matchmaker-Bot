@@ -28,6 +28,8 @@ mapList = ['Blizzard World', 'Busan', 'Dorado',
 
 # main matchmaking function
 # chooses 12 players, splits into roles, matchmakes roles, and then combines them back together
+
+
 def matchmake(playerData):
     queued = 0
     for i in playerData.keys():
@@ -113,6 +115,8 @@ def balance(role):
 # combines the different roles into a team
 # average sr is first element in both team A and team B
 # good work team
+
+
 def combine(playerData, tank, dps, supp):
     dReverse = False
     sReverse = False
@@ -177,8 +181,9 @@ def combine(playerData, tank, dps, supp):
 
 # Selects a random map from the map pool
 def randomMap():
-    i = random.randint(0,18)
+    i = random.randint(0, 18)
     return mapList[i]
+
 
 def main():
     allPlayerData = {
@@ -198,6 +203,6 @@ def main():
 
     print(matchmake(allPlayerData))
     print()
-    print(adjust(allPlayerData, 1))
+    # print(adjust(allPlayerData, 1))
 
-#main()
+# main()

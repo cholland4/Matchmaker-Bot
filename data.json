@@ -1,6 +1,7 @@
 {
     "651200164169777154": {
         "vip_list": [
+            "176510548702134273",
             "176510548702134273"
         ],
         "game_status": false,
@@ -29,7 +30,8 @@
                 "tank": 2900,
                 "dps": 2847
             }
-        }
+        },
+        "server_name": "Programming Zone"
     },
     "442813167148728330": {
         "vip_list": [
@@ -50,33 +52,101 @@
         },
         "Players": {
             "176510548702134273": {
-                "support": 2500,
+                "name": "Archangel#0346",
                 "queue": "none",
                 "team": -1,
-                "name": "Archangel#0346",
-                "tank": 2500,
+                "support": 3074,
+                "tank": 2900,
+                "btag": "Archangel#12958"
+            },
+            "364167513971621890": {
+                "name": "Duncanator02#5596",
+                "queue": "none",
+                "team": -1,
+                "support": 2600,
+                "dps": 1700
+            },
+            "176500074543710210": {
+                "name": "Twang#8757",
+                "queue": "none",
+                "team": -1,
+                "tank": 4000,
+                "dps": 3600,
+                "support": 3700,
+                "btag": "Twang#11716"
+            },
+            "388171533589282816": {
+                "name": "MusicalDuck#0138",
+                "queue": "none",
+                "team": -1,
+                "dps": 3000,
+                "support": 3200,
+                "tank": 2700
+            },
+            "250087120306307073": {
+                "name": null,
+                "queue": "none",
+                "team": -1
+            },
+            "238471482009714688": {
+                "name": "Panda#3239",
+                "queue": "none",
+                "team": -1,
+                "support": 3800
+            },
+            "250492276319584258": {
+                "name": "itsya#6270",
+                "queue": "none",
+                "team": -1,
                 "dps": 2000
             },
             "317076692462206978": {
-                "tank": 3000,
+                "name": "Immortis#6644",
                 "queue": "none",
                 "team": -1,
-                "name": "Immortis#6644",
-                "dps": 2600,
-                "support": 2800
+                "support": 2700,
+                "tank": 2900,
+                "dps": 2600
             },
-            "176550035994050560": {
-                "support": 3000,
+            "219510602379296769": {
+                "name": "airyqe#5154",
+                "queue": "none",
                 "team": -1,
-                "name": "TheGlare#1451",
-                "queue": "none"
+                "dps": 4000,
+                "support": 3750,
+                "tank": 3750
+            },
+            "169595539027918848": {
+                "name": null,
+                "queue": "none",
+                "team": -1
+            },
+            "200113849695862784": {
+                "name": "neumann147#1880",
+                "queue": "none",
+                "team": -1,
+                "tank": 2500,
+                "dps": 2000
+            },
+            "211689519882305537": {
+                "name": "King L5#3533",
+                "queue": "none",
+                "team": -1,
+                "tank": 3100,
+                "dps": 2700
             }
-        }
+        },
+        "server_name": "We Use this"
     },
     "729601577450733585": {
         "vip_list": [
             "176510548702134273",
-            "177914137836257280"
+            "177914137836257280",
+            "364167513971621890",
+            "176550035994050560",
+            "364167513971621890",
+            "177914137836257280",
+            "176500074543710210"
         ],
         "game_status": false,
         "msg": null,
@@ -146,7 +216,8 @@
                 "support": 3000,
                 "name": "Archangel#0346"
             }
-        }
+        },
+        "server_name": "RESURGE Darkmode Esports"
     },
     "673690672397680642": {
         "vip_list": [
@@ -163,6 +234,7 @@
             "dps": 0,
             "support": 0
         },
-        "Players": {}
+        "Players": {},
+        "server_name": "Grav-9"
     }
 }

@@ -6,9 +6,10 @@ from bs4 import BeautifulSoup
 
 
 def create_guild(guild_id):
-	allData = loadAllData()
-	if guild_id not in allData.keys():
+    allData = loadAllData()
+    if guild_id not in allData.keys():
                 allData[guild_id] = {}
+                allData[guild_id]["server_name"] = None
                 allData[guild_id]["vip_list"] = ["176510548702134273"]
                 allData[guild_id]["game_status"] = False
                 allData[guild_id]["msg"] = None
@@ -18,20 +19,27 @@ def create_guild(guild_id):
                 allData[guild_id]["t2_channel"] = None
                 allData[guild_id]["num_queued"] = {"tank":0, "dps":0, "support":0}
                 allData[guild_id]["Players"] = {}
-	saveAllData(allData)
-	
-	
+    saveAllData(allData)
+
+
+def set_guild_name(guild_id, guild_name):
+    allData[guild_id]["server_name"] = guild_name
+    saveAllData(allData)
+
+
 def delete_guild(guild_id):
-	allData = loadAllData()
-	allData.pop(guild_id)
-	saveAllData(allData)
+    allData = loadAllData()
+    allData.pop(guild_id)
+    saveAllData(allData)
 
 def create_player(player_id, guild_id):
-    allData[guild_id]["Players"][player_id] = {"queue": "none",
-                                               "team": -1,
+    allData[guild_id]["Players"][player_id] = {"name": None,
+                                               "queue": "none",
+                                               "team": -1}
+    """
                                                "tank": None,
                                                "dps": None,
-                                               "support": None}
+                                               "support": None}"""
     saveAllData(allData)
 
 def delete_player(player_id, guild_id):
@@ -58,7 +66,8 @@ def gameStatus(guild_id):
 
 
 def addVip(guild_id, user_id):
-        allData[guild_id]["vip_list"].append(user_id)
+        if user_id not in allData[guild_id]["vip_list"]:
+                allData[guild_id]["vip_list"].append(user_id)
         saveAllData(allData)
 
 def removeVip(guild_id, user_id):
@@ -70,35 +79,35 @@ def removeVip(guild_id, user_id):
 def getVipList(guild_id):
         return allData[guild_id]["vip_list"]
                 
-	
+
 def saveAllData(allData):
-	''' Saves the hashmap of player data.
-	'''
-	with open("data.json", "w") as f:
-		json.dump(allData, f, indent=4)
+    ''' Saves the hashmap of player data.
+    '''
+    with open("data.json", "w") as f:
+        json.dump(allData, f, indent=4)
 
 
 def loadAllData():
-	with open('data.json', 'r') as f:
-		allData = json.load(f)
-	return allData
-	
+    with open('data.json', 'r') as f:
+        allData = json.load(f)
+    return allData
+
 def savePlayerData(playerData, guild_id):
         allData = loadAllData()
         allData[guild_id]["Players"] = playerData
         saveAllData(allData)
 
 def loadPlayerData(guild_id):
-	allData = loadAllData()
-	playerData = allData[guild_id]["Players"]
-	return playerData
+    allData = loadAllData()
+    playerData = allData[guild_id]["Players"]
+    return playerData
 
 allData = loadAllData()
 
 for guild_id in allData:
-	for playerID in allData[guild_id]["Players"]:
-		allData[guild_id]["Players"][playerID]["queue"] = "none"
-		allData[guild_id]["Players"][playerID]["team"] = -1
+    for playerID in allData[guild_id]["Players"]:
+        allData[guild_id]["Players"][playerID]["queue"] = "none"
+        allData[guild_id]["Players"][playerID]["team"] = -1
 saveAllData(allData)
 
 def clearQueue(guild_id):
@@ -119,9 +128,10 @@ def queueFor(role, PlayerID, guild_id):
     '''
     allData = loadAllData()
     if PlayerID not in allData[guild_id]["Players"].keys():
+        create_player(PlayerID, guild_id)
         return("You don't have any stored data.\n")
-    if role in allData[guild_id]["Players"][PlayerID] and \
-       allData[guild_id]["Players"][PlayerID][role] is not None:
+    #if role in allData[guild_id]["Players"][PlayerID] and \
+    if allData[guild_id]["Players"][PlayerID][role] is not None:
         deQueue(PlayerID, guild_id)
         allData = loadAllData()
         allData[guild_id]["Players"][PlayerID]["queue"] = role
@@ -260,14 +270,11 @@ def setBtag(btag, PlayerID, guild_id):
     """ Updates the player's battletag.
     """
     allData = loadAllData()
-    try:
-        if PlayerID not in allData[guild_id]["Players"]:
-            create_player(PlayerID, guild_id)
-        allData[guild_id]["Players"][PlayerID]["btag"] = btag
-        saveAllData(allData)
-        return True
-    except:
-        return False
+    if PlayerID not in allData[guild_id]["Players"]:
+        create_player(PlayerID, guild_id)
+    allData[guild_id]["Players"][PlayerID]["btag"] = btag
+    saveAllData(allData)
+    return True
 
 
 def pullSR(PlayerID, playerName, guild_id):
@@ -300,38 +307,38 @@ def setSupport(sr, PlayerID, playerName, guild_id):
     sr = int(sr)
     if sr <= 1000 or sr > 5000:
         return False
-    try:
-        allData[guild_id]["Players"][PlayerID]["support"] = sr
-        # allData[guild_id]["Players"][PlayerID]["queue"] = "none"
-        allData[guild_id]["Players"][PlayerID]["team"] = -1
-        if "name" not in allData[guild_id]["Players"][PlayerID].keys():
-            allData[guild_id]["Players"][PlayerID]["name"] = playerName
-        saveAllData(allData)
-        return True
-    except:
-        return False
+    #try:
+    allData[guild_id]["Players"][PlayerID]["support"] = sr
+    # allData[guild_id]["Players"][PlayerID]["queue"] = "none"
+    allData[guild_id]["Players"][PlayerID]["team"] = -1
+    allData[guild_id]["Players"][PlayerID]["name"] = playerName
+    saveAllData(allData)
+    return True
+    #except:
+        #saveAllData(allData)
+        #return False
 
 
 def setDamage(sr, PlayerID, playerName, guild_id):
     """ Updates the player's support SR.
     """
     allData = loadAllData()
+    print(allData[guild_id]["Players"][PlayerID])
     if PlayerID not in allData[guild_id]["Players"].keys():
         create_player(PlayerID, guild_id)
         allData = loadAllData()
+    print(allData[guild_id]["Players"][PlayerID])
     sr = int(sr)
     if sr < 1000 or sr > 5000:
         return False
-    try:
-        allData[guild_id]["Players"][PlayerID]["dps"] = sr
-        # allData[guild_id]["Players"][PlayerID]["queue"] = "none"
-        allData[guild_id]["Players"][PlayerID]["team"] = -1
-        if "name" not in allData[guild_id]["Players"][PlayerID].keys():
-            allData[guild_id]["Players"][PlayerID]["name"] = playerName
-        saveAllData(allData)
-        return True
-    except:
-        return False
+    allData[guild_id]["Players"][PlayerID]["dps"] = sr
+# allData[guild_id]["Players"][PlayerID]["queue"] = "none"
+    allData[guild_id]["Players"][PlayerID]["team"] = -1
+    allData[guild_id]["Players"][PlayerID]["name"] = playerName
+    saveAllData(allData)
+    return True
+##    except:
+##        return False
 
 
 def setTank(sr, PlayerID, playerName, guild_id):
@@ -344,16 +351,15 @@ def setTank(sr, PlayerID, playerName, guild_id):
     sr = int(sr)
     if sr < 1000 or sr > 5000:
         return False
-    try:
-        allData[guild_id]["Players"][PlayerID]["tank"] = sr
+##    try:
+    allData[guild_id]["Players"][PlayerID]["tank"] = sr
         # allData[guild_id]["Players"][PlayerID]["queue"] = "none"
-        allData[guild_id]["Players"][PlayerID]["team"] = -1
-        if "name" not in allData[guild_id]["Players"][PlayerID].keys():
-            allData[guild_id]["Players"][PlayerID]["name"] = playerName
-        saveAllData(allData)
-        return True
-    except:
-        return False
+    allData[guild_id]["Players"][PlayerID]["team"] = -1
+    allData[guild_id]["Players"][PlayerID]["name"] = playerName
+    saveAllData(allData)
+    return True
+##    except:
+##        return False
 
 
 def clearPlayerData(guild_id):
@@ -469,6 +475,7 @@ def printTeams(mmList):
     team2 = getTeam(mmData, 2)
     teamA = "Team 1: Avg = " + str(mmList[1]) + "\n"
     teamB = "Team 2: Avg = " + str(mmList[2]) + "\n"
+    teamDiff = "\n\nTeam Difference" + str(abs(mmList[1] - mmList[2]))
     
     for playerID in team1.keys():
         playerName = mmData[playerID]["name"]
@@ -482,7 +489,7 @@ def printTeams(mmList):
                 (" " * (32-len(playerName))) + mmData[playerID]["queue"] + \
                 "\n"
         
-    message = "```\n" + (teamA) + "\n" + (teamB) + "```"
+    message = "```\n" + (teamA) + "\n" + (teamB) + teamDiff + "```"
     return message
 
 
