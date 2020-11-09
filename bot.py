@@ -919,4 +919,7 @@ async def gay(ctx):
                                        " is a furry.")
 
 """
-client.run("NzA3NzI0OTUzMzUyNTM2MTU2.XrM-OQ.o5tSNKCFU75gBquuaxtdqY2FHfw")
+tokenfile = open("token.txt", "r")
+token = tokenfile.readline()
+tokenfile.close()
+client.run(token)
