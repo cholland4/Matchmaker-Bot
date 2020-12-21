@@ -81,8 +81,8 @@ def getVipList(guild_id):
                 
 
 def saveAllData(allData):
-    ''' Saves the hashmap of player data.
-    '''
+    """ Saves the hashmap of player data.
+    """
     with open("data.json", "w") as f:
         json.dump(allData, f, indent=4)
 
@@ -111,8 +111,8 @@ for guild_id in allData:
 saveAllData(allData)
 
 def clearQueue(guild_id):
-    ''' Clears the number of players queued and empties the queue.
-    '''
+    """ Clears the number of players queued and empties the queue.
+    """
     allData = loadAllData()
     for playerID in allData[guild_id]["Players"]:
         allData[guild_id]["Players"][playerID]["queue"] = "none"
@@ -122,10 +122,10 @@ def clearQueue(guild_id):
 
 
 def queueFor(role, PlayerID, guild_id):
-    ''' Removes the player from the queue
+    """ Removes the player from the queue
         Sets the player's queued role to whatever they specified.
         Updates number of players queued for each role.
-    '''
+    """
     allData = loadAllData()
     if PlayerID not in allData[guild_id]["Players"].keys():
         create_player(PlayerID, guild_id)
@@ -156,8 +156,8 @@ def queueFor(role, PlayerID, guild_id):
 
 
 def suppQueued(guild_id):
-    ''' Returns the number of support players needed to fill the queue.
-    '''
+    """ Returns the number of support players needed to fill the queue.
+    """
     allData = loadAllData()
     if allData[guild_id]["num_queued"]["support"] < 4:
         numNeeded = 4 - allData[guild_id]["num_queued"]["support"]
@@ -167,8 +167,8 @@ def suppQueued(guild_id):
 
 
 def tankQueued(guild_id):
-    ''' Returns the number of tank players needed to fill the queue.
-    '''
+    """ Returns the number of tank players needed to fill the queue.
+    """
     allData = loadAllData()
     if allData[guild_id]["num_queued"]["tank"] < 4:
         numNeeded = 4 - allData[guild_id]["num_queued"]["tank"]
@@ -178,9 +178,9 @@ def tankQueued(guild_id):
 
 
 def adjust(winner, guild_id):
-    ''' Increases the winning team's SR by 100 for the role they queued.
+    """ Increases the winning team's SR by 100 for the role they queued.
         Decreases the losing team's SR by 100 for the role they queued.
-    '''
+    """
     allData = loadAllData()
     if(winner != 0):
         for playerID in allData[guild_id]["Players"]:
@@ -201,8 +201,8 @@ def adjust(winner, guild_id):
 
 
 def dpsQueued(guild_id):
-    ''' Returns the number of dps players needed to fill the queue.
-    '''
+    """ Returns the number of dps players needed to fill the queue.
+    """
     allData = loadAllData()
     if allData[guild_id]["num_queued"]["dps"] < 4:
         numNeeded = 4 - allData[guild_id]["num_queued"]["dps"]
@@ -212,8 +212,8 @@ def dpsQueued(guild_id):
 
 
 def allQueued(guild_id):
-    ''' Returns true if all queue conditions are met.
-    '''
+    """ Returns true if all queue conditions are met.
+    """
     if dpsQueued(guild_id) != 0:
         return False
     if tankQueued(guild_id) != 0:
@@ -224,9 +224,9 @@ def allQueued(guild_id):
 
 
 def deQueue(PlayerID, guild_id):
-    ''' Removes the player from the queue.
+    """ Removes the player from the queue.
         Updates number of players queued for each role.
-    '''
+    """
     allData = loadAllData()
     role = allData[guild_id]["Players"][PlayerID]["queue"]
     allData[guild_id]["Players"][PlayerID]["queue"] = "none"
@@ -363,8 +363,8 @@ def setTank(sr, PlayerID, playerName, guild_id):
 
 
 def clearPlayerData(guild_id):
-    ''' Clears playerData of everything.
-    '''
+    """ Clears playerData of everything.
+    """
     allData = loadAllData()
     allData[guild_id]["Players"].clear()
     saveAllData(allData)
@@ -372,16 +372,16 @@ def clearPlayerData(guild_id):
 
 
 def getPlayerData(PlayerID, guild_id):
-    ''' Returns a specific player's data.
+    """ Returns a specific player's data.
         If possible, should be formatted.
-    '''
+    """
     pData = loadPlayerData(guild_id)
     return pData[PlayerID]
 
 
 def printPlayerData(PlayerID, guild_id):
-    ''' Returns a formatted string with specific user data.
-    '''
+    """ Returns a formatted string with specific user data.
+    """
     pData = getPlayerData(PlayerID, guild_id)
     t_message = ""
     d_message = ""
@@ -400,9 +400,9 @@ def printPlayerData(PlayerID, guild_id):
 
 
 def printAllPlayerData(guild_id):
-    ''' Returns a formatted string with all user data.
-    '''
-    playerData = loadAllPlayerData(guild_id)
+    """ Returns a formatted string with all user data.
+    """
+    playerData = loadPlayerData(guild_id)
     message = ""
     for PlayerID in playerData.keys():
         message = message + printPlayerData(PlayerID) + "\n\n"
@@ -412,8 +412,8 @@ def printAllPlayerData(guild_id):
 
 
 def printQueueData(PlayerID, guild_id):
-    ''' Returns a formatted string about a specific user's queue status.
-    '''
+    """ Returns a formatted string about a specific user's queue status.
+    """
     allData = loadAllData()
     if allData[guild_id]["Players"][PlayerID]["queue"] == "none":
         message = " is not queued!"
@@ -423,8 +423,8 @@ def printQueueData(PlayerID, guild_id):
 
 
 def printQueue(guild_id):
-    ''' Returns a formatted string with all the users in queue.
-    '''
+    """ Returns a formatted string with all the users in queue.
+    """
     pData = getAllPlayerData(guild_id)
     queue = ""
     for playerID in pData.keys():
@@ -437,9 +437,9 @@ def printQueue(guild_id):
 
 
 def getAllPlayerData(guild_id):
-    ''' Returns all player's data.
+    """ Returns all player's data.
         If possible, should be formatted.
-    '''
+    """
     pData = loadPlayerData(guild_id)
     return pData
 
@@ -447,8 +447,8 @@ key_queue = "queue"
 # I got this far with rewriting playerData with allData or allData[guild_id]["Players"]
 
 def getTeam(mmData, teamNum):
-    ''' Gets teams.
-    '''
+    """ Gets teams.
+    """
     team = {}
     tanks = {}
     dps = {}
@@ -468,8 +468,8 @@ def getTeam(mmData, teamNum):
 
 
 def printTeams(mmList):
-    ''' Returns a formatted string containing all players for both teams.
-    '''
+    """ Returns a formatted string containing all players for both teams.
+    """
     mmData = mmList[0]
     team1 = getTeam(mmData, 1)
     team2 = getTeam(mmData, 2)
@@ -494,16 +494,16 @@ def printTeams(mmList):
 
 
 def getPlayerTeam(playerID, guild_id):
-    ''' Returns the team number that a specific player is on
-    '''
+    """ Returns the team number that a specific player is on
+    """
     playerData = loadPlayerData(guild_id)
     team = str(playerData[playerID]["team"])
     return team
 
 
 def get_team_id(playerData, teamnum, guild_id):
-    ''' Returns a list of discord user ID tags for members of specified.
-    '''
+    """ Returns a list of discord user ID tags for members of specified.
+    """
     allData = loadAllData()
     team_list = []
     for playerID in allData[guild_id]["Players"].keys():
