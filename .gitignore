@@ -7,3 +7,8 @@ mmBotKey.ppk
 *.xml
 *.iml
 token.txt
+data.json
+Procfile
+README.md
+requirements.txt
+test_data.json
